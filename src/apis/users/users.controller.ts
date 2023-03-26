@@ -31,17 +31,8 @@ export class UsersController {
   })
   async create(@Body() createUserDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    return this.usersService.create({
-      email: createUserDto.email,
-      hashedPassword,
-      phone: createUserDto.phone,
-      nickname: createUserDto.nickname,
-      address: createUserDto.address,
-      name: createUserDto.name,
-      agreement_use: createUserDto.agreement_use,
-      agreement_mkt: createUserDto.agreement_mkt,
-      favorites: createUserDto.favorites,
-    });
+    createUserDto.password = hashedPassword;
+    return this.usersService.create(createUserDto);
   }
 
   @Get('find/id')

@@ -12,34 +12,22 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create({
-    email,
-    hashedPassword: password,
-    phone,
-    nickname,
-    address,
-    name,
-    agreement_use,
-    agreement_mkt,
-    favorites,
-  }) {
-    const user = await this.userRepository.findOneBy({ email });
+  async create(createUserDto) {
+    const user = await this.userRepository.findOneBy({
+      email: createUserDto.email,
+    });
 
     if (user) {
       throw new ConflictException('이미 가입한 email입니다.');
     }
-    const newUser = await this.userRepository.save({
-      email,
-      password,
-      phone,
-      nickname,
-      address,
-      name,
-      agreement_use,
-      agreement_mkt,
-      favorites,
-    });
-    return newUser;
+    await this.userRepository.save(createUserDto);
+
+    return {
+      status: {
+        code: 200,
+        message: '회원가입 성공!',
+      },
+    };
   }
 
   async findId({ name, phone }) {

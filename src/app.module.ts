@@ -3,7 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+
 import { FileModule } from './apis/fileupload/fileupload.module';
+
+import { ProductsModule } from './apis/products/products.module';
+import { UsersModule } from './apis/users/users.module';
+import { AuthModule } from './apis/auth/auth.module';
+
 
 @Module({
   imports: [
@@ -17,9 +23,12 @@ import { FileModule } from './apis/fileupload/fileupload.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
       entities: [__dirname + '/apis/**/*.entity.*'],
-      synchronize: false,
+      synchronize: true,
       logging: true,
     }),
+    ProductsModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

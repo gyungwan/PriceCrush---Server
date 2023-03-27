@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
+
 import { FileModule } from './apis/fileupload/fileupload.module';
 
 import { ProductsModule } from './apis/products/products.module';
+
 
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
@@ -27,7 +29,12 @@ import { AuthModule } from './apis/auth/auth.module';
       synchronize: true,
       logging: true,
     }),
+
+    ProductsModule,
+    UsersModule,
+
     // ProductsModule,
+
     AuthModule,
     UsersModule,
   ],

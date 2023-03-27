@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { CertificationCodeDto } from './dto/certification-code.dto';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
@@ -31,7 +32,7 @@ export class AuthController {
     return this.authService.create(createAuthDto);
   }
 
-  @Get('certification')
+  @Post('sms')
   @ApiOperation({
     summary: '인증번호 발송',
     description: '유저 인증번호발송 API',
@@ -40,8 +41,9 @@ export class AuthController {
     description: '발송 성공 여부가 리턴됩니다',
     // type: CreateUserResponseDto,
   })
-  sendsms() {
-    return this.authService.sendsms();
+  sendsms(@Body() body) {
+    const phone = body.phone;
+    return this.authService.sendsms(phone);
   }
 
   @Post('certification')
@@ -53,8 +55,8 @@ export class AuthController {
     description: '인증 성공 여부가 리턴됩니다.',
     // type: CreateUserResponseDto,
   })
-  certification() {
-    return this.authService.certification();
+  certification(@Body() body: CertificationCodeDto) {
+    return this.authService.certification(body);
   }
 
   @Post('password')

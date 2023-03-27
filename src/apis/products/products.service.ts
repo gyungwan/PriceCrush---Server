@@ -11,9 +11,11 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
+
   async create({ createProductInput }: IProductsServiceCreate) {
     const { name } = createProductInput; //이부분 코드 더 짜야하는데 공부하고 짤게요ㅠ
     const result = await this.productRepository.save({ name });
     return result;
   }
+
 }

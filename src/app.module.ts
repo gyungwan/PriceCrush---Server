@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { ProductsModule } from './apis/products/products.module';
+//import { ProductsModule } from './apis/products/products.module';
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
 
@@ -21,7 +21,7 @@ import { AuthModule } from './apis/auth/auth.module';
       synchronize: true,
       logging: true,
     }),
-    ProductsModule,
+    //ProductsModule,
     UsersModule,
     AuthModule,
   ],

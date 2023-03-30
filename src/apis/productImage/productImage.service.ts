@@ -13,9 +13,9 @@ export class ProductImageService {
   find({ ProductID }) {
     return this.productImageRepository.find({
       where: {
-        Product: {
-          id: ProductID,
-        },
+        // Product: {
+        //   id: ProductID,
+        // },
       },
     });
   }

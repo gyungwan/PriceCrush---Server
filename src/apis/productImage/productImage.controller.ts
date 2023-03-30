@@ -6,6 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { ProductImageService } from './productImage.service';
 
 @Controller('productImage')
 @ApiTags('상품 이미지 업로드 API')
@@ -32,5 +33,7 @@ export class ProductImageController {
     },
   })
   @ApiConsumes('multipart/form-data')
-  async create(@Req() request, @Res() response) {}
+  async create(@Req() request, @Res() response) {
+    console.log('');
+  }
 }

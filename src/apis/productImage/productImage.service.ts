@@ -10,13 +10,15 @@ export class ProductImageService {
     private readonly productImageRepository: Repository<ProductImage>,
   ) {}
 
-  find({ ProductID }) {
+  find({ productID }) {
     return this.productImageRepository.find({
       where: {
+        product: { id: productID },
         // Product: {
         //   id: ProductID,
         // },
       },
+      relations: ['Product'],
     });
   }
 }

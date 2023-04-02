@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Min } from 'class-validator';
 
 export class CreateProductInput {
   @ApiProperty({ description: '상품명' })
   name: string;
 
+  @Min(0)
   @ApiProperty({ description: '입찰시작가' })
   start_price: number;
 

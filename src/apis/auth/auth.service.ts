@@ -1,4 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ConflictException,
+  ExecutionContext,
+  Injectable,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import coolsms from 'coolsms-node-sdk';
@@ -7,16 +12,41 @@ import { Auth } from './entities/auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CertificationCodeDto } from './dto/certification-code.dto';
+import { Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Auth)
     private readonly authRepository: Repository<Auth>,
+    private readonly jwtService: JwtService,
   ) {}
 
   create(createAuthDto: CreateAuthDto) {
     return 'This action adds a new auth';
+  }
+
+  setRefreshService({ user, res }) {
+    const refreshToken = this.jwtService.sign(
+      { email: user.email }, //
+      { secret: 'myRefreshKey', expiresIn: '2w' },
+    );
+    // 이후 보안 설정 추가 필요함.
+    res.setHeader('Set-Cookie', `refreshToken=${refreshToken}`);
+    return;
+  }
+
+  getAccesstoken({ user }) {
+    // const token = this.jwtService.sign(
+    //   { email: user.email }, //
+    //   { secret: 'myAccessKey', expiresIn: '1h' },
+    // );
+    return this.jwtService.sign(
+      { email: user.email }, //
+      { secret: 'myAccessKey', expiresIn: '1h' },
+    );
   }
 
   async sendsms(phone: string) {

@@ -4,15 +4,13 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-
 import { FileModule } from './apis/fileupload/fileupload.module';
 
 import { ProductsModule } from './apis/products/products.module';
 
-
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
-
+import { ProductCategoryModule } from './apis/product-category/product-category.module';
 
 @Module({
   imports: [
@@ -31,12 +29,9 @@ import { AuthModule } from './apis/auth/auth.module';
     }),
 
     ProductsModule,
-    UsersModule,
-
-    // ProductsModule,
-
     AuthModule,
     UsersModule,
+    // ProductCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

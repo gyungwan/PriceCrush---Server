@@ -1,7 +1,10 @@
+import { ProductCategory } from 'src/apis/product-category/entities/product-category.entity';
+import { User } from 'src/apis/users/entities/user.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -30,4 +33,10 @@ export class Product {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @ManyToOne(() => ProductCategory)
+  productCategory: ProductCategory;
+
+  @ManyToOne(() => User)
+  user: User;
 }

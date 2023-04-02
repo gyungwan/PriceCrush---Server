@@ -19,6 +19,7 @@ export class ProductsService {
   }
 
   async findAll() {
+    // const result = await this.productRepository.find({where:{}});
     const result = await this.productRepository.find();
     return result;
   }

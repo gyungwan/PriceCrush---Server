@@ -10,6 +10,7 @@ import { ProductsModule } from './apis/products/products.module';
 
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
+import { ProductCategoryModule } from './apis/product-category/product-category.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuthModule } from './apis/auth/auth.module';
     ProductsModule,
     AuthModule,
     UsersModule,
+    // ProductCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,11 +1,9 @@
-
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Controller, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -16,13 +14,12 @@ import { ProductImageService } from './productImage.service';
 export class ProductImageController {
   constructor(private readonly productImageService: ProductImageService) {}
 
-
   @Get()
   @ApiOperation({})
   @ApiResponse({})
   async find(@Param() productID: string) {
     return await this.productImageService.find({ productID });
-
+  }
   @ApiBearerAuth()
   @Post()
   @ApiOperation({
@@ -45,6 +42,5 @@ export class ProductImageController {
   @ApiConsumes('multipart/form-data')
   async create(@Req() request, @Res() response) {
     console.log('');
-
   }
 }

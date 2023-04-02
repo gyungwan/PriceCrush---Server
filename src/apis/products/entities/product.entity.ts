@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Product {
@@ -22,4 +27,7 @@ export class Product {
 
   @Column()
   status: string;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

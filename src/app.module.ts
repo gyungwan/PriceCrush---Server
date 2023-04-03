@@ -31,7 +31,7 @@ import { ProductCategoryModule } from './apis/product-category/product-category.
     ProductsModule,
     AuthModule,
     UsersModule,
-    // ProductCategoryModule,
+    ProductCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -82,4 +82,28 @@ export class ProductsController {
   async deleteProduct(@Param('id') id: string) {
     return await this.productsService.delete({ id });
   }
+
+  //----------------- 상품 판매중인 상태로 변경 -----------------------//
+  // 스케쥴러로 할것인가 인터벌로 할것인가...
+  @Put('/start/:id')
+  @ApiOperation({
+    summary: '상품 상태 변경',
+    description: '상품 상태 변경 API',
+  })
+  @ApiResponse({ type: UpdateProductInput })
+  async updateStart(@Param('id') id: string) {
+    return await this.productsService.startStatus({ productId: id });
+  }
+
+  //----------------- 상품 판매완료 상태로 변경 -----------------------//
+  // 스케쥴러로 할것인가 인터벌로 할것인가...
+  @Put('/end/:id')
+  @ApiOperation({
+    summary: '상품 상태 변경',
+    description: '상품 상태 변경 API',
+  })
+  @ApiResponse({ type: UpdateProductInput })
+  async updateEnd(@Param('id') id: string) {
+    return await this.productsService.endStatus({ productId: id });
+  }
 }

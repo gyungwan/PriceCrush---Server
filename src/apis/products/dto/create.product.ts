@@ -17,4 +17,7 @@ export class CreateProductInput {
 
   @ApiProperty({ description: '경매 종료 일/시' })
   end_date: Date;
+
+  @ApiProperty({ description: '상품 카테고리' })
+  productCategory: string;
 }

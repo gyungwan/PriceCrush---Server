@@ -12,7 +12,6 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-
   async create({ createProductInput }) {
     //이부분 코드 더 짜야하는데 공부하고 짤게요ㅠ
     const result = await this.productRepository.save({ ...createProductInput });
@@ -49,5 +48,4 @@ export class ProductsService {
     const result = await this.productRepository.softDelete({ id });
     return result.affected ? true : false;
   }
-
 }

@@ -8,6 +8,7 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -58,4 +59,7 @@ export class Product {
 
   @ManyToOne(() => User)
   user: User;
+
+  // 이미지를 어떤식으로 저장할지 ??
+  //@OneToMany()
 }

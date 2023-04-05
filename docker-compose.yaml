@@ -16,7 +16,7 @@ services:
     image: mysql:latest
     environment:
       MYSQL_DATABASE: 'priceCrush'
-      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'backend123'
     ports:
       - 3306:3306
 

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Min } from 'class-validator';
+import { Auction } from 'src/apis/auction/entities/auction.entity';
 import { ProductCategory } from 'src/apis/product-category/entities/product-category.entity';
 import { User } from 'src/apis/users/entities/user.entity';
 
@@ -9,6 +10,7 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -62,4 +64,7 @@ export class Product {
 
   // 이미지를 어떤식으로 저장할지 ??
   //@OneToMany()
+
+  @OneToOne(() => Auction, (auction) => auction.product)
+  auction: Auction;
 }

@@ -11,6 +11,7 @@ import { ProductsModule } from './apis/products/products.module';
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { ProductCategoryModule } from './apis/product-category/product-category.module';
+import { AuctionModule } from './apis/auction/auction.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ProductCategoryModule } from './apis/product-category/product-category.
     AuthModule,
     UsersModule,
     ProductCategoryModule,
+    AuctionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

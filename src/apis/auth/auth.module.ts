@@ -18,6 +18,6 @@ import { jwtAccessStrategy } from 'src/common/auth/jwt-access.strategy';
     JwtModule.register({}),
   ],
   controllers: [AuthController],
-  providers: [jwtAccessStrategy, jwtRefreshStrategy, AuthService, UsersService],
+  providers: [AuthService, UsersService],
 })
 export class AuthModule {}

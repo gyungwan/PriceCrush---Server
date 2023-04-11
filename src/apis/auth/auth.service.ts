@@ -1,20 +1,12 @@
-import {
-  CanActivate,
-  ConflictException,
-  ExecutionContext,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import coolsms from 'coolsms-node-sdk';
-import axios from 'axios';
 import { Auth } from './entities/auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CertificationCodeDto } from './dto/certification-code.dto';
-import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {

@@ -6,13 +6,15 @@ import {
   Param,
   Post,
   Put,
-  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateProductInput } from './dto/create.product';
 import { UpdateProductInput } from './dto/update.product';
 import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
 
 @Controller('product')
 @ApiTags('상품 API')
@@ -20,6 +22,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   //----------------- 생성 -----------------------//
+  @UseGuards(RestAuthAccessGuard)
   @Post('/')
   @ApiOperation({
     summary: '상품 생성',

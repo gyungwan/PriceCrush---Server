@@ -11,6 +11,8 @@ import { ProductsModule } from './apis/products/products.module';
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { ProductCategoryModule } from './apis/product-category/product-category.module';
+import { CategoryImageModule } from './apis/categoryImage/categoryImage.module';
+import { ProductImageModule } from './apis/productImage/productImage.module';
 
 @Module({
   imports: [
@@ -27,7 +29,8 @@ import { ProductCategoryModule } from './apis/product-category/product-category.
       synchronize: true,
       logging: true,
     }),
-
+    CategoryImageModule,
+    ProductImageModule,
     ProductsModule,
     AuthModule,
     UsersModule,

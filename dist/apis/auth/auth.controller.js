@@ -22,18 +22,19 @@ const users_service_1 = require("../users/users.service");
 const auth_service_1 = require("./auth.service");
 const certification_code_dto_1 = require("./dto/certification-code.dto");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const passport_1 = require("@nestjs/passport");
+const login_dto_1 = require("./dto/login.dto");
+const sms_dto_1 = require("./dto/sms.dto");
 let AuthController = class AuthController {
     constructor(authService, usersService) {
         this.authService = authService;
         this.usersService = usersService;
     }
-    async login(email, password, res) {
-        const user = await this.usersService.findOne({ email });
+    async login(loginDto, res) {
+        const user = await this.usersService.findOne({ email: loginDto.email });
         if (!user) {
             throw new common_1.UnprocessableEntityException('가입한 계정이 없거나 비밀번호가 올바르지 않습니다');
         }
-        const isAuth = await bcrypt_1.default.compare(password, user.password);
+        const isAuth = await bcrypt_1.default.compare(loginDto.password, user.password);
         if (!isAuth) {
             throw new common_1.UnprocessableEntityException('가입한 계정이 없거나 비밀번호가 올바르지 않습니다');
         }
@@ -44,10 +45,11 @@ let AuthController = class AuthController {
     }
     async restoreAccessToken(req) {
         const { user } = req;
+        console.log(user);
         return this.authService.getAccesstoken({ user });
     }
-    sendsms(body) {
-        const phone = body.phone;
+    sendsms(smsDto) {
+        const phone = smsDto.phone;
         console.log('문자가 전송됩니다.');
         return this.authService.sendsms(phone);
     }
@@ -70,22 +72,20 @@ __decorate([
     (0, swagger_1.ApiResponse)({
         description: 'access token, refresh token이 리턴됩니다',
     }),
-    __param(0, (0, common_1.Body)('email')),
-    __param(1, (0, common_1.Body)('password')),
-    __param(2, (0, common_1.Res)({ passthrough: true })),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('refresh')),
     (0, common_1.Post)('refresh'),
     (0, swagger_1.ApiOperation)({
-        summary: '유저 리프레시 토큰 발급',
-        description: '리프레시 토큰 발급 API',
+        summary: 'access token 발급',
+        description: 'access token 발급 API',
     }),
     (0, swagger_1.ApiResponse)({
-        description: 'access token, refresh token이 리턴됩니다',
+        description: 'access token이 리턴됩니다',
     }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -103,7 +103,7 @@ __decorate([
     }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [sms_dto_1.SmsDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "sendsms", null);
 __decorate([

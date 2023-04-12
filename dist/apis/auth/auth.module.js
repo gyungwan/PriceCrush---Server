@@ -15,8 +15,6 @@ const auth_entity_1 = require("./entities/auth.entity");
 const users_service_1 = require("../users/users.service");
 const user_entity_1 = require("../users/entities/user.entity");
 const jwt_1 = require("@nestjs/jwt");
-const jwt_refresh_strategy_1 = require("../../common/auth/jwt-refresh.strategy");
-const jwt_access_strategy_1 = require("../../common/auth/jwt-access.strategy");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
@@ -27,7 +25,7 @@ AuthModule = __decorate([
             jwt_1.JwtModule.register({}),
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [jwt_access_strategy_1.jwtAccessStrategy, jwt_refresh_strategy_1.jwtRefreshStrategy, auth_service_1.AuthService, users_service_1.UsersService],
+        providers: [auth_service_1.AuthService, users_service_1.UsersService],
     })
 ], AuthModule);
 exports.AuthModule = AuthModule;

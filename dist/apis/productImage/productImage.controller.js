@@ -23,9 +23,6 @@ let ProductImageController = class ProductImageController {
     async find(productID) {
         return await this.productImageService.find({ productID });
     }
-    async create(request, response) {
-        console.log('');
-    }
 };
 __decorate([
     (0, common_1.Get)(),
@@ -36,33 +33,6 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductImageController.prototype, "find", null);
-__decorate([
-    (0, swagger_1.ApiBearerAuth)(),
-    (0, common_1.Post)(),
-    (0, swagger_1.ApiOperation)({
-        summary: '상품 이미지 업로드',
-        description: '상품 이미지 업로드 API',
-    }),
-    (0, swagger_1.ApiBody)({
-        required: true,
-        type: 'multipart/form-data',
-        schema: {
-            type: 'object',
-            properties: {
-                upload: {
-                    type: 'string',
-                    format: 'binary',
-                },
-            },
-        },
-    }),
-    (0, swagger_1.ApiConsumes)('multipart/form-data'),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], ProductImageController.prototype, "create", null);
 ProductImageController = __decorate([
     (0, common_1.Controller)('productImage'),
     (0, swagger_1.ApiTags)('상품 이미지 API'),

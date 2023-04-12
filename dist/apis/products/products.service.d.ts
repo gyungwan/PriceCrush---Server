@@ -17,32 +17,4 @@ export declare class ProductsService {
     delete({ id }: {
         id: any;
     }): Promise<boolean>;
-    startStatus({ productId }: {
-        productId: any;
-    }): Promise<{
-        status: number;
-        id: string;
-        name: string;
-        start_price: number;
-        desc: string;
-        start_date: Date;
-        end_date: Date;
-        deletedAt: Date;
-        productCategory: import("../product-category/entities/product-category.entity").ProductCategory;
-        user: import("../users/entities/user.entity").User;
-    } & Product>;
-    endStatus({ productId }: {
-        productId: any;
-    }): Promise<{
-        status: number;
-        id: string;
-        name: string;
-        start_price: number;
-        desc: string;
-        start_date: Date;
-        end_date: Date;
-        deletedAt: Date;
-        productCategory: import("../product-category/entities/product-category.entity").ProductCategory;
-        user: import("../users/entities/user.entity").User;
-    } & Product>;
 }

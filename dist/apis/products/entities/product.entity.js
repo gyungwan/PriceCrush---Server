@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
+const auction_entity_1 = require("../../auction/entities/auction.entity");
 const product_category_entity_1 = require("../../product-category/entities/product-category.entity");
 const user_entity_1 = require("../../users/entities/user.entity");
 const typeorm_1 = require("typeorm");
@@ -73,6 +74,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.User),
     __metadata("design:type", user_entity_1.User)
 ], Product.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => auction_entity_1.Auction, (auction) => auction.product),
+    __metadata("design:type", auction_entity_1.Auction)
+], Product.prototype, "auction", void 0);
 Product = __decorate([
     (0, typeorm_1.Entity)()
 ], Product);

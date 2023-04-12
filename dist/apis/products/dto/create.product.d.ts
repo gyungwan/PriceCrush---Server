@@ -5,4 +5,5 @@ export declare class CreateProductInput {
     start_date: Date;
     end_date: Date;
     productCategory: string;
+    user: string;
 }

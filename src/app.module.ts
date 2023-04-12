@@ -12,7 +12,6 @@ import { CategoryImageModule } from './apis/categoryImage/categoryImage.module';
 import { ProductImageModule } from './apis/productImage/productImage.module';
 import { AuctionModule } from './apis/auction/auction.module';
 
-
 @Module({
   imports: [
     FileModule,

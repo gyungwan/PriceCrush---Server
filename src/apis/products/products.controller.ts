@@ -8,7 +8,12 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProperty,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateProductInput } from './dto/create.product';
 import { UpdateProductInput } from './dto/update.product';
 import { ProductsService } from './products.service';
@@ -21,7 +26,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   //----------------- 생성 -----------------------//
-  @UseGuards(RestAuthAccessGuard)
+  // @UseGuards(RestAuthAccessGuard)
   @Post('/')
   @ApiOperation({
     summary: '상품 생성',
@@ -55,6 +60,7 @@ export class ProductsController {
     summary: '상품 상세 조회',
     description: '상품 상세 조회 API',
   })
+  @ApiResponse({ type: Product })
   async getProduct(@Param('id') id: string) {
     return await this.productsService.find({ productId: id });
   }
@@ -67,6 +73,7 @@ export class ProductsController {
     summary: '상품 업데이트',
     description: '상품 업데이트 API',
   })
+  @ApiResponse({ type: Product })
   async updateProduct(
     @Param('id') id: string,
     @Body() updateProductInput: UpdateProductInput,

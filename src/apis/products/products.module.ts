@@ -8,6 +8,6 @@ import { ProductsService } from './products.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Product])],
   controllers: [ProductsController],
-  providers: [jwtAccessStrategy, ProductsService],
+  providers: [ProductsService],
 })
 export class ProductsModule {}

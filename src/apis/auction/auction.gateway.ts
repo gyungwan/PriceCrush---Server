@@ -40,9 +40,9 @@ export class AuctionGateway
   }
 
   @SubscribeMessage('bid')
-  handleBid(client: Socket, data: { auctionId: string; price: number }) {
+  handleBid(client: Socket, data: { prod_id: string; price: number }) {
     console.log(`Client ${client.id} bid with ${data[0].price}`);
     console.log(data);
-    this.auctionService.bid(client, data[0].auctionId, data[0].price);
+    this.auctionService.bid(client, data[0].prod_id, data[0].price);
   }
 }

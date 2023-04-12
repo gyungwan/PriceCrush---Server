@@ -1,13 +1,15 @@
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { CertificationCodeDto } from './dto/certification-code.dto';
+import { LoginDto } from './dto/login.dto';
+import { SmsDto } from './dto/sms.dto';
 export declare class AuthController {
     private readonly authService;
     private readonly usersService;
     constructor(authService: AuthService, usersService: UsersService);
-    login(email: string, password: string, res: Response): Promise<string>;
+    login(loginDto: LoginDto, res: Response): Promise<string>;
     restoreAccessToken(req: any): Promise<string>;
-    sendsms(body: any): Promise<{
+    sendsms(smsDto: SmsDto): Promise<{
         status: {
             code: number;
             msg: string;

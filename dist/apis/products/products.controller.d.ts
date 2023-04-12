@@ -10,28 +10,4 @@ export declare class ProductsController {
     getProduct(id: string): Promise<Product[]>;
     updateProduct(id: string, updateProductInput: UpdateProductInput): Promise<any>;
     deleteProduct(id: string): Promise<boolean>;
-    updateStart(id: string): Promise<{
-        status: number;
-        id: string;
-        name: string;
-        start_price: number;
-        desc: string;
-        start_date: Date;
-        end_date: Date;
-        deletedAt: Date;
-        productCategory: import("../product-category/entities/product-category.entity").ProductCategory;
-        user: import("../users/entities/user.entity").User;
-    } & Product>;
-    updateEnd(id: string): Promise<{
-        status: number;
-        id: string;
-        name: string;
-        start_price: number;
-        desc: string;
-        start_date: Date;
-        end_date: Date;
-        deletedAt: Date;
-        productCategory: import("../product-category/entities/product-category.entity").ProductCategory;
-        user: import("../users/entities/user.entity").User;
-    } & Product>;
 }

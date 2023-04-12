@@ -1,3 +1,4 @@
+import { Auction } from 'src/apis/auction/entities/auction.entity';
 import { ProductCategory } from 'src/apis/product-category/entities/product-category.entity';
 import { User } from 'src/apis/users/entities/user.entity';
 declare enum ProductStatus {
@@ -17,5 +18,6 @@ export declare class Product {
     deletedAt: Date;
     productCategory: ProductCategory;
     user: User;
+    auction: Auction;
 }
 export {};

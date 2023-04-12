@@ -32,7 +32,7 @@ let AuthService = class AuthService {
     }
     setRefreshService({ user, res }) {
         const refreshToken = this.jwtService.sign({ email: user.email }, { secret: 'myRefreshKey', expiresIn: '2w' });
-        res.setHeader('Set-Cookie', `refreshToken=${refreshToken}`);
+        res.setHeader('Set-Cookie', `myRefreshKey=${refreshToken}`);
         return;
     }
     getAccesstoken({ user }) {

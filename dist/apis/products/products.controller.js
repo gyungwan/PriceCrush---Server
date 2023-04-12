@@ -41,12 +41,6 @@ let ProductsController = class ProductsController {
     async deleteProduct(id) {
         return await this.productsService.delete({ id });
     }
-    async updateStart(id) {
-        return await this.productsService.startStatus({ productId: id });
-    }
-    async updateEnd(id) {
-        return await this.productsService.endStatus({ productId: id });
-    }
 };
 __decorate([
     (0, common_1.Post)('/'),
@@ -82,6 +76,7 @@ __decorate([
         summary: '상품 상세 조회',
         description: '상품 상세 조회 API',
     }),
+    (0, swagger_1.ApiResponse)({ type: product_entity_1.Product }),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -93,6 +88,7 @@ __decorate([
         summary: '상품 업데이트',
         description: '상품 업데이트 API',
     }),
+    (0, swagger_1.ApiResponse)({ type: product_entity_1.Product }),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -108,30 +104,6 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "deleteProduct", null);
-__decorate([
-    (0, common_1.Put)('/start/:id'),
-    (0, swagger_1.ApiOperation)({
-        summary: '상품 상태 변경',
-        description: '상품 상태 변경 API',
-    }),
-    (0, swagger_1.ApiResponse)({ type: update_product_1.UpdateProductInput }),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], ProductsController.prototype, "updateStart", null);
-__decorate([
-    (0, common_1.Put)('/end/:id'),
-    (0, swagger_1.ApiOperation)({
-        summary: '상품 상태 변경',
-        description: '상품 상태 변경 API',
-    }),
-    (0, swagger_1.ApiResponse)({ type: update_product_1.UpdateProductInput }),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], ProductsController.prototype, "updateEnd", null);
 ProductsController = __decorate([
     (0, common_1.Controller)('product'),
     (0, swagger_1.ApiTags)('상품 API'),

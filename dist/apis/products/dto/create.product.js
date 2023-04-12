@@ -36,8 +36,12 @@ __decorate([
     __metadata("design:type", Date)
 ], CreateProductInput.prototype, "end_date", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ description: '상품 카테고리' }),
+    (0, swagger_1.ApiProperty)({ description: '상품 카테고리 id' }),
     __metadata("design:type", String)
 ], CreateProductInput.prototype, "productCategory", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '유저 id' }),
+    __metadata("design:type", String)
+], CreateProductInput.prototype, "user", void 0);
 exports.CreateProductInput = CreateProductInput;
 //# sourceMappingURL=create.product.js.map

@@ -16,6 +16,7 @@ exports.FileController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const fileupload_service_1 = require("./fileupload.service");
+const swagger_1 = require("@nestjs/swagger");
 let FileController = class FileController {
     constructor(fileService) {
         this.fileService = fileService;
@@ -38,7 +39,26 @@ let FileController = class FileController {
 };
 __decorate([
     (0, common_1.Post)('upload'),
+    (0, swagger_1.ApiOperation)({
+        summary: '파일 업로드',
+        description: '파일 업로드 API',
+    }),
+    (0, swagger_1.ApiResponse)({
+        description: '이미지 url이 리턴됩니다',
+    }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    }),
     __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -46,7 +66,26 @@ __decorate([
 ], FileController.prototype, "uploadFile", null);
 __decorate([
     (0, common_1.Post)('uploads'),
+    (0, swagger_1.ApiOperation)({
+        summary: '파일 업로드',
+        description: '파일 업로드 API',
+    }),
+    (0, swagger_1.ApiResponse)({
+        description: '이미지 url이 리턴됩니다',
+    }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files', 10)),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    }),
     __param(0, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

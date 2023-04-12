@@ -13,12 +13,10 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { CertificationCodeDto } from './dto/certification-code.dto';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import bcrypt from 'bcrypt';
-import { AuthGuard } from '@nestjs/passport';
-import { jwtRefreshStrategy } from 'src/common/auth/jwt-refresh.strategy';
-import { jwtAccessStrategy } from 'src/common/auth/jwt-access.strategy';
+import { LoginDto } from './dto/login.dto';
+import { RestAuthRefreshGuard } from 'src/common/auth/rest-auth-guards';
+import { SmsDto } from './dto/sms.dto';
 
 @Controller('auth')
 @ApiTags('인증 API')
@@ -38,17 +36,16 @@ export class AuthController {
     // type: CreateUserResponseDto,
   })
   async login(
-    @Body('email') email: string, //
-    @Body('password') password: string,
+    @Body() loginDto: LoginDto, //
     @Res({ passthrough: true }) res: Response,
   ) {
-    const user = await this.usersService.findOne({ email });
+    const user = await this.usersService.findOne({ email: loginDto.email });
     if (!user) {
       throw new UnprocessableEntityException(
         '가입한 계정이 없거나 비밀번호가 올바르지 않습니다',
       );
     }
-    const isAuth = await bcrypt.compare(password, user.password);
+    const isAuth = await bcrypt.compare(loginDto.password, user.password);
     if (!isAuth) {
       throw new UnprocessableEntityException(
         '가입한 계정이 없거나 비밀번호가 올바르지 않습니다',
@@ -60,19 +57,20 @@ export class AuthController {
     return accessToken;
   }
 
-  @UseGuards(AuthGuard('refresh'))
+  // @UseGuards(RestAuthRefreshGuard)
   @Post('refresh')
   @ApiOperation({
-    summary: '유저 리프레시 토큰 발급',
-    description: '리프레시 토큰 발급 API',
+    summary: 'access token 발급',
+    description: 'access token 발급 API',
   })
   @ApiResponse({
-    description: 'access token, refresh token이 리턴됩니다',
+    description: 'access token이 리턴됩니다',
     // type: CreateUserResponseDto,
   })
   async restoreAccessToken(@Req() req) {
     // current user를 어떻게 알 수 있지?
     const { user } = req;
+    console.log(user);
     return this.authService.getAccesstoken({ user });
   }
 
@@ -85,8 +83,8 @@ export class AuthController {
     description: '발송 성공 여부가 리턴됩니다',
     // type: CreateUserResponseDto,
   })
-  sendsms(@Body() body) {
-    const phone = body.phone;
+  sendsms(@Body() smsDto: SmsDto) {
+    const phone = smsDto.phone;
     console.log('문자가 전송됩니다.');
     return this.authService.sendsms(phone);
   }

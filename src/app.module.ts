@@ -11,6 +11,8 @@ import { ProductCategoryModule } from './apis/product-category/product-category.
 import { CategoryImageModule } from './apis/categoryImage/categoryImage.module';
 import { ProductImageModule } from './apis/productImage/productImage.module';
 import { AuctionModule } from './apis/auction/auction.module';
+import { jwtAccessStrategy } from './common/auth/jwt-access.strategy';
+import { jwtRefreshStrategy } from './common/auth/jwt-refresh.strategy';
 
 @Module({
   imports: [
@@ -36,6 +38,6 @@ import { AuctionModule } from './apis/auction/auction.module';
     AuctionModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, jwtAccessStrategy, jwtRefreshStrategy],
 })
 export class AppModule {}

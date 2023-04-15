@@ -25,11 +25,11 @@ export class AuctionController {
 
   @Get()
   findAll() {
-    return this.auctionService.findAll();
+    return '';
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.auctionService.findOne(id);
+    return '';
   }
 }

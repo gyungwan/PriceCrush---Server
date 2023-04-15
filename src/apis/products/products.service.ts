@@ -36,7 +36,7 @@ export class ProductsService {
   }
 
   async find({ productId }) {
-    const result = await this.productRepository.find({
+    const result = await this.productRepository.findOne({
       where: { id: productId },
     });
     return result;

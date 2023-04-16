@@ -17,45 +17,84 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
 const auction_entity_1 = require("./entities/auction.entity");
+const products_service_1 = require("../products/products.service");
 let AuctionService = class AuctionService {
-    constructor(auctionRepository) {
+    constructor(auctionRepository, productService) {
         this.auctionRepository = auctionRepository;
-        this.auctions = [
-            { id: '1', user_id: 'auction1', prod_id: 'prod_1', price: 1000 },
-            { id: '2', user_id: 'auction2', prod_id: 'prod_2', price: 1000 },
-        ];
+        this.productService = productService;
     }
     create(createAuctionDto) {
         return 'This action adds a new auction';
     }
-    findAll() {
-        return this.auctions;
+    async findOneAuction({ productId }) {
+        return await this.auctionRepository.findOne({
+            where: { product: { id: productId } },
+            order: { price: 'DESC' },
+        });
     }
-    findOne(id) {
-        return this.auctions.find((auction) => auction.id === id);
+    async findMyAuction({ productId, userId }) {
+        const auction = await this.auctionRepository.findOne({
+            where: {
+                product: { id: productId },
+                user: { id: userId },
+            },
+        });
+        return auction;
     }
-    joinRoom(socket, prod_id) {
-        socket.join(`product-${prod_id}`);
+    async findAllAuctions({ productId }) {
+        return await this.auctionRepository.find({ where: { product: productId } });
     }
-    async bid(socket, prod_id, price) {
-        const auction = this.findOne(prod_id);
-        console.log(auction);
-        const currentPrice = 0;
-        if (price > currentPrice) {
-            auction.price = price;
-            socket.emit('bidResult', {
+    joinPageRoom(client, prod_id) {
+        console.log(prod_id);
+        client.join(`product-${prod_id}`);
+    }
+    async bid(client, data) {
+        const product = await this.productService.find({ productId: data.product });
+        if (!product)
+            return;
+        let now = new Date();
+        now = new Date(now.setHours(now.getHours() + 9));
+        const isLive = now > product.start_date && now <= product.end_date;
+        console.log(isLive);
+        if (!isLive)
+            return;
+        const auction = await this.findOneAuction({ productId: product.id });
+        const myAuction = await this.findMyAuction({
+            productId: product.id,
+            userId: data.user,
+        });
+        console.log('myAuction:', myAuction);
+        const currentPrice = auction ? auction.price : product.start_price;
+        let auctionResult = {};
+        if (data.price > currentPrice) {
+            if (!myAuction) {
+                auctionResult = await this.auctionRepository.save({
+                    product: { id: data.product },
+                    user: { id: data.user },
+                    price: data.price,
+                });
+            }
+            else {
+                Object.assign(myAuction, { price: data.price, update_dt: new Date() });
+                console.log(myAuction);
+                auctionResult = await this.auctionRepository.save(myAuction);
+            }
+            client.join(`auction-${product.id}`);
+            client
+                .to(`product-${product.id}`)
+                .to(`auction-${data.user}`)
+                .emit('bidResult', {
                 success: true,
-                message: `Bid successfully with ${price} for ${auction.prod_id}`,
-                auction,
+                message: `Bid successfully with ${data.price} for ${product.name}`,
+                auctionResult,
             });
-            socket.broadcast.emit('newBid', auction);
-            await this.auctionRepository.save({});
+            client.emit('newBid', auction);
         }
         else {
-            socket.emit('bidResult', {
+            client.emit('bidResult', {
                 success: false,
-                message: `Bid failed with ${price} for ${auction}`,
-                auction,
+                message: `Bid failed with ${data.price} for ${product.name}`,
+                auctionResult,
             });
         }
     }
@@ -63,7 +102,8 @@ let AuctionService = class AuctionService {
 AuctionService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_2.InjectRepository)(auction_entity_1.Auction)),
-    __metadata("design:paramtypes", [typeorm_1.Repository])
+    __metadata("design:paramtypes", [typeorm_1.Repository,
+        products_service_1.ProductsService])
 ], AuctionService);
 exports.AuctionService = AuctionService;
 //# sourceMappingURL=auction.service.js.map

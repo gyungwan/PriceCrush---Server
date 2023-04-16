@@ -25,10 +25,10 @@ let AuctionController = class AuctionController {
         return this.auctionService.create(createAuctionDto);
     }
     findAll() {
-        return this.auctionService.findAll();
+        return '';
     }
     findOne(id) {
-        return this.auctionService.findOne(id);
+        return '';
     }
 };
 __decorate([

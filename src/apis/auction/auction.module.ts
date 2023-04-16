@@ -7,12 +7,10 @@ import { Auction } from './entities/auction.entity';
 import { Repository } from 'typeorm';
 import { ProductsService } from '../products/products.service';
 import { Product } from '../products/entities/product.entity';
+import { ProductImage } from '../productImage/entities/productImage.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Auction]),
-    TypeOrmModule.forFeature([Product]),
-  ],
+  imports: [TypeOrmModule.forFeature([Auction, Product, ProductImage])],
   controllers: [AuctionController],
   providers: [AuctionService, AuctionGateway, ProductsService, Repository],
 })

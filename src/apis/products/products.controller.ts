@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -19,6 +21,7 @@ import { UpdateProductInput } from './dto/update.product';
 import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
 import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('product')
 @ApiTags('상품 API')
@@ -28,6 +31,7 @@ export class ProductsController {
   //----------------- 생성 -----------------------//
   // @UseGuards(RestAuthAccessGuard)
   @Post('/')
+  @UseInterceptors(FilesInterceptor('files', 10))
   @ApiOperation({
     summary: '상품 생성',
     description: '상품 생성 API',
@@ -35,8 +39,13 @@ export class ProductsController {
   @ApiResponse({
     type: Product,
   })
-  async createProduct(@Body() createProductInput: CreateProductInput) {
-    return await this.productsService.create({ createProductInput });
+  async createProduct(
+    @Body('createproductRequest') createproductRequest: string,
+    @UploadedFiles() files: Express.MulterS3.File,
+  ) {
+    const createProductInput = JSON.parse(createproductRequest);
+
+    return await this.productsService.create({ createProductInput, files });
   }
 
   //----------------- 전체상품조회 -----------------------//

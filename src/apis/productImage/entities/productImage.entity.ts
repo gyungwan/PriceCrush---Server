@@ -6,7 +6,7 @@ export class ProductImage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ default: '' })
+  @Column()
   url: string;
 
   @Column()

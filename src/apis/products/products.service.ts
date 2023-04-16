@@ -1,18 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
-import { IProductsServiceCreate } from './interface/products-service.interface';
-import { CreateProductInput } from './dto/create.product';
+import { ProductImage } from '../productImage/entities/productImage.entity';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+
+    @InjectRepository(ProductImage)
+    private readonly productImageRepository: Repository<ProductImage>,
   ) {}
 
-  async create({ createProductInput }) {
+  async create({ createProductInput, files }) {
+    if (!files) {
+      throw new BadRequestException('파일을 업로드해 주세요.');
+    }
+
+    console.log(files);
+
+    const imgurl: string[] = [];
+
+    await Promise.all(
+      files.map(async (file: Express.MulterS3.File) => {
+        const key = file.location;
+        imgurl.push(key);
+      }),
+    );
+
     const { productCategory, user, ...product } = createProductInput;
     console.log('act');
     const result = await this.productRepository.save({
@@ -24,6 +41,18 @@ export class ProductsService {
         id: user,
       },
     });
+
+    await Promise.all(
+      imgurl.map((el, i) =>
+        this.productImageRepository.save({
+          url: el,
+          is_main: i === 0 ? true : false,
+          product: {
+            ...result,
+          },
+        }),
+      ),
+    );
     return result;
   }
 

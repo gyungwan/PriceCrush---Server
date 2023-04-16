@@ -1,15 +1,27 @@
 import { CreateAuctionDto } from './dto/create-auction.dto';
-import { AuctionInterface } from './interfaces/auction.interface';
 import { Socket } from 'socket.io';
 import { Repository } from 'typeorm';
 import { Auction } from './entities/auction.entity';
+import { ProductsService } from '../products/products.service';
 export declare class AuctionService {
     private readonly auctionRepository;
-    constructor(auctionRepository: Repository<Auction>);
-    private readonly auctions;
+    private readonly productService;
+    constructor(auctionRepository: Repository<Auction>, productService: ProductsService);
     create(createAuctionDto: CreateAuctionDto): string;
-    findAll(): AuctionInterface[];
-    findOne(id: string): AuctionInterface;
-    joinRoom(socket: Socket, prod_id: string): void;
-    bid(socket: Socket, prod_id: string, price: number): Promise<void>;
+    findOneAuction({ productId }: {
+        productId: any;
+    }): Promise<Auction>;
+    findMyAuction({ productId, userId }: {
+        productId: any;
+        userId: any;
+    }): Promise<Auction>;
+    findAllAuctions({ productId }: {
+        productId: any;
+    }): Promise<Auction[]>;
+    joinPageRoom(client: Socket, prod_id: any): void;
+    bid(client: Socket, data: {
+        product: string;
+        user: string;
+        price: number;
+    }): Promise<void>;
 }

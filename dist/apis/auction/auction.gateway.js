@@ -13,6 +13,7 @@ exports.AuctionGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 const auction_service_1 = require("./auction.service");
+const swagger_1 = require("@nestjs/swagger");
 let AuctionGateway = class AuctionGateway {
     constructor(auctionService) {
         this.auctionService = auctionService;
@@ -26,14 +27,15 @@ let AuctionGateway = class AuctionGateway {
     handleDisconnect(client) {
         console.log(`Client disconnected: ${client.id}`);
     }
-    handleJoinRoom(client, prod_id) {
-        console.log(`Client ${client.id} join to room ${prod_id}`);
-        this.auctionService.joinRoom(client, prod_id);
+    handleJoinPageRoom(client, data) {
+        console.log(data);
+        console.log(`Client ${client.id} join to room ${data[0].prod_id}`);
+        this.auctionService.joinPageRoom(client, data[0].prod_id);
     }
     handleBid(client, data) {
         console.log(`Client ${client.id} bid with ${data[0].price}`);
-        console.log(data);
-        this.auctionService.bid(client, data[0].prod_id, data[0].price);
+        console.log(data[0]);
+        this.auctionService.bid(client, data[0]);
     }
 };
 __decorate([
@@ -41,11 +43,11 @@ __decorate([
     __metadata("design:type", socket_io_1.Server)
 ], AuctionGateway.prototype, "server", void 0);
 __decorate([
-    (0, websockets_1.SubscribeMessage)('join'),
+    (0, websockets_1.SubscribeMessage)('join-page'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, String]),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", void 0)
-], AuctionGateway.prototype, "handleJoinRoom", null);
+], AuctionGateway.prototype, "handleJoinPageRoom", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('bid'),
     __metadata("design:type", Function),
@@ -54,6 +56,7 @@ __decorate([
 ], AuctionGateway.prototype, "handleBid", null);
 AuctionGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ namespace: 'auction' }),
+    (0, swagger_1.ApiTags)('WebSockets'),
     __metadata("design:paramtypes", [auction_service_1.AuctionService])
 ], AuctionGateway);
 exports.AuctionGateway = AuctionGateway;

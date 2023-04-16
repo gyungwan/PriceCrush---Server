@@ -8,9 +8,12 @@ export declare class AuctionGateway implements OnGatewayInit, OnGatewayConnectio
     afterInit(): void;
     handleConnection(client: Socket, ...args: any[]): void;
     handleDisconnect(client: Socket): void;
-    handleJoinRoom(client: Socket, prod_id: string): void;
+    handleJoinPageRoom(client: Socket, data: {
+        prod_id: string;
+    }): void;
     handleBid(client: Socket, data: {
         prod_id: string;
+        user_id: string;
         price: number;
     }): void;
 }

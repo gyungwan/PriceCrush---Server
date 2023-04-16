@@ -6,9 +6,5 @@ export declare class FileController {
     uploadFile(file: Express.MulterS3.File): {
         filePath: string;
     };
-    uploadFiles(files: any): Promise<{
-        statusCode: number;
-        message: string;
-        data: string[];
-    }>;
+    uploadFiles(files: any): Promise<string[]>;
 }

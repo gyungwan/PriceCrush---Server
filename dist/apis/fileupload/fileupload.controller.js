@@ -30,11 +30,7 @@ let FileController = class FileController {
             const key = await this.fileService.uploadFiles(file);
             imgurl.push(key);
         }));
-        return {
-            statusCode: 201,
-            message: '이미지 등록 성공',
-            data: imgurl,
-        };
+        return imgurl;
     }
 };
 __decorate([

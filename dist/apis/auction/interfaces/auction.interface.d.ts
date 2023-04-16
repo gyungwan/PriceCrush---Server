@@ -1,8 +1,10 @@
 export interface AuctionInterface {
     id: string;
-    user_id: string;
-    prod_id: string;
+    user: string;
+    product: string;
     price: number;
+    create_dt: Date;
+    update_dt: Date;
 }
 export interface Bid {
     id: number;

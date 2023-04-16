@@ -12,16 +12,18 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-  async create({ createProductInput }) {
-    const { productCategory, user, ...product } = createProductInput;
+  async create({ userId, createProductInput }) {
+    const { productCategory, ...product } = createProductInput;
+
     console.log('act');
+
     const result = await this.productRepository.save({
       ...product,
       productCategory: {
         id: productCategory,
       },
       user: {
-        id: user,
+        id: userId,
       },
     });
     return result;

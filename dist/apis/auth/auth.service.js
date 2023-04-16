@@ -36,7 +36,12 @@ let AuthService = class AuthService {
         return;
     }
     getAccesstoken({ user }) {
-        return this.jwtService.sign({ email: user.email }, { secret: 'myAccessKey', expiresIn: '1h' });
+        return this.jwtService.sign({
+            id: user.id,
+            email: user.email,
+            nickname: user.nickname,
+            name: user.name,
+        }, { secret: 'myAccessKey', expiresIn: '1h' });
     }
     async sendsms(phone) {
         const messageService = new coolsms_node_sdk_1.default(process.env.COOLSMS_API_KEY, process.env.COOLSMS_API_SECRET);

@@ -19,13 +19,21 @@ const create_product_1 = require("./dto/create.product");
 const update_product_1 = require("./dto/update.product");
 const products_service_1 = require("./products.service");
 const product_entity_1 = require("./entities/product.entity");
+const rest_auth_guards_1 = require("../../common/auth/rest-auth-guards");
 const platform_express_1 = require("@nestjs/platform-express");
 let ProductsController = class ProductsController {
     constructor(productsService) {
         this.productsService = productsService;
     }
-    async createProduct(createProductInput, files) {
-        return await this.productsService.create({ createProductInput, files });
+    async createProduct(createproductRequest, req, files) {
+        const createProductInput = JSON.parse(createproductRequest);
+        const userId = req.user.id;
+        console.log(userId);
+        return await this.productsService.create({
+            userId,
+            createProductInput,
+            files,
+        });
     }
     async getProducts() {
         return await this.productsService.findAll();
@@ -44,19 +52,25 @@ let ProductsController = class ProductsController {
     }
 };
 __decorate([
+    (0, common_1.UseGuards)(rest_auth_guards_1.RestAuthAccessGuard),
     (0, common_1.Post)('/'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('file', 10)),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files', 10)),
     (0, swagger_1.ApiOperation)({
         summary: '상품 생성',
         description: '상품 생성 API',
     }),
+    (0, swagger_1.ApiBody)({
+        description: 'form-data로 넘겨주세요. accessToken을 함께 넘겨줘야합니다. createProductInput에 상품 정보를 넣고, 이미지를 따로 넘겨주세요. postman예시는 카톡으로 드리겠습니다. ',
+        type: create_product_1.CreateProductInput,
+    }),
     (0, swagger_1.ApiResponse)({
         type: product_entity_1.Product,
     }),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.UploadedFiles)()),
+    __param(0, (0, common_1.Body)('createproductRequest')),
+    __param(1, (0, common_1.Request)()),
+    __param(2, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_product_1.CreateProductInput, Object]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "createProduct", null);
 __decorate([

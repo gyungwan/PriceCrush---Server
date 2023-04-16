@@ -27,11 +27,6 @@ let AuctionGateway = class AuctionGateway {
     handleDisconnect(client) {
         console.log(`Client disconnected: ${client.id}`);
     }
-    handleJoinPageRoom(client, data) {
-        console.log(data);
-        console.log(`Client ${client.id} join to room ${data[0].prod_id}`);
-        this.auctionService.joinPageRoom(client, data[0].prod_id);
-    }
     handleBid(client, data) {
         console.log(`Client ${client.id} bid with ${data[0].price}`);
         console.log(data[0]);
@@ -42,12 +37,6 @@ __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
 ], AuctionGateway.prototype, "server", void 0);
-__decorate([
-    (0, websockets_1.SubscribeMessage)('join-page'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
-    __metadata("design:returntype", void 0)
-], AuctionGateway.prototype, "handleJoinPageRoom", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('bid'),
     __metadata("design:type", Function),

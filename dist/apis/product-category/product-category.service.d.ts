@@ -1,3 +1,4 @@
+/// <reference types="multer-s3" />
 import { Repository } from 'typeorm';
 import { ProductCategory } from './entities/product-category.entity';
 export declare class ProductCategoryService {
@@ -5,8 +6,9 @@ export declare class ProductCategoryService {
     constructor(productCategoryRepository: Repository<ProductCategory>);
     create({ name }: {
         name: any;
-    }): Promise<{
+    }, file: Express.MulterS3.File): Promise<{
         name: any;
+        imgurl: string;
     } & ProductCategory>;
     findAll(): Promise<ProductCategory[]>;
     update({ id, name }: {

@@ -44,10 +44,6 @@ let AuctionService = class AuctionService {
     async findAllAuctions({ productId }) {
         return await this.auctionRepository.find({ where: { product: productId } });
     }
-    joinPageRoom(client, prod_id) {
-        console.log(prod_id);
-        client.join(`product-${prod_id}`);
-    }
     async bid(client, data) {
         const product = await this.productService.find({ productId: data.product });
         if (!product)
@@ -79,16 +75,13 @@ let AuctionService = class AuctionService {
                 console.log(myAuction);
                 auctionResult = await this.auctionRepository.save(myAuction);
             }
-            client.join(`auction-${product.id}`);
+            await client.join(`auction-${product.id}`);
             client
-                .to(`product-${product.id}`)
-                .to(`auction-${data.user}`)
                 .emit('bidResult', {
                 success: true,
                 message: `Bid successfully with ${data.price} for ${product.name}`,
                 auctionResult,
             });
-            client.emit('newBid', auction);
         }
         else {
             client.emit('bidResult', {

@@ -17,7 +17,6 @@ const products_module_1 = require("./apis/products/products.module");
 const users_module_1 = require("./apis/users/users.module");
 const auth_module_1 = require("./apis/auth/auth.module");
 const product_category_module_1 = require("./apis/product-category/product-category.module");
-const categoryImage_module_1 = require("./apis/categoryImage/categoryImage.module");
 const productImage_module_1 = require("./apis/productImage/productImage.module");
 const auction_module_1 = require("./apis/auction/auction.module");
 const jwt_access_strategy_1 = require("./common/auth/jwt-access.strategy");
@@ -40,7 +39,6 @@ AppModule = __decorate([
                 synchronize: true,
                 logging: true,
             }),
-            categoryImage_module_1.CategoryImageModule,
             productImage_module_1.ProductImageModule,
             products_module_1.ProductsModule,
             auth_module_1.AuthModule,

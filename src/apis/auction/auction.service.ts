@@ -47,11 +47,6 @@ export class AuctionService {
   // prodRoom은 productId가 room의 고유값이 되고, 상품상세페이지에서 입장시에 room에 join, 퇴장시에 room에서 leave
   // auctionRoom은 productId가 room의 고유값이 되고, 입찰시에 room에 join되고, 상품 입찰 종료시에 room에서 leave
 
-  joinPageRoom(client: Socket, prod_id) {
-    console.log(prod_id);
-    client.join(`product-${prod_id}`);
-  }
-
   // room을 productId로 하고, socket을 room에 join시키고, bid를 하면 room에 있는 모든 socket에게 broadcast
   async bid(
     client: Socket,
@@ -101,16 +96,15 @@ export class AuctionService {
         console.log(myAuction);
         auctionResult = await this.auctionRepository.save(myAuction);
       }
-      client.join(`auction-${product.id}`);
+      await client.join(`auction-${product.id}`);
       client
-        .to(`product-${product.id}`)
-        .to(`auction-${data.user}`)
+        // .to(`product-${product.id}`)
+        // .to(`auction-${product.id}`)
         .emit('bidResult', {
           success: true,
           message: `Bid successfully with ${data.price} for ${product.name}`,
           auctionResult,
         });
-      client.emit('newBid', auction);
       // 새로운 입찰이 진행되었을 때, productId room에 있는 모든 socket에게 broadcast
       // 새로운 입찰이 진행되었을 때, auctoinId room에 있는 입찰자에게만 broadcast
     } else {

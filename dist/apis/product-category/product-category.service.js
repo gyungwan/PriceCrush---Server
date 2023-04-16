@@ -21,8 +21,15 @@ let ProductCategoryService = class ProductCategoryService {
     constructor(productCategoryRepository) {
         this.productCategoryRepository = productCategoryRepository;
     }
-    async create({ name }) {
-        return await this.productCategoryRepository.save({ name });
+    async create({ name }, file) {
+        if (!file) {
+            throw new common_1.BadRequestException('파일을 업로드 해세요.');
+        }
+        const imgurl = file.location;
+        return await this.productCategoryRepository.save({
+            name,
+            imgurl,
+        });
     }
     async findAll() {
         return await this.productCategoryRepository.find();

@@ -18,7 +18,6 @@ export declare class AuctionService {
     findAllAuctions({ productId }: {
         productId: any;
     }): Promise<Auction[]>;
-    joinPageRoom(client: Socket, prod_id: any): void;
     bid(client: Socket, data: {
         product: string;
         user: string;

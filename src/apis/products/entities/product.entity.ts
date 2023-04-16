@@ -8,6 +8,7 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -60,6 +61,7 @@ export class Product {
   productCategory: ProductCategory;
 
   @ManyToOne(() => User)
+  @JoinColumn()
   user: User;
 
   // 이미지를 어떤식으로 저장할지 ??

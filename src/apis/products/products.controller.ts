@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -26,7 +27,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   //----------------- 생성 -----------------------//
-  // @UseGuards(RestAuthAccessGuard)
+  //@UseGuards(RestAuthAccessGuard)
   @Post('/')
   @ApiOperation({
     summary: '상품 생성',
@@ -35,8 +36,12 @@ export class ProductsController {
   @ApiResponse({
     type: Product,
   })
-  async createProduct(@Body() createProductInput: CreateProductInput) {
-    return await this.productsService.create({ createProductInput });
+  async createProduct(
+    @Request() req,
+    @Body() createProductInput: CreateProductInput,
+  ) {
+    const userId = req.user.id;
+    return await this.productsService.create({ userId, createProductInput });
   }
 
   //----------------- 전체상품조회 -----------------------//

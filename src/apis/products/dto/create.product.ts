@@ -21,6 +21,6 @@ export class CreateProductInput {
   @ApiProperty({ description: '상품 카테고리 id' })
   productCategory: string;
 
-  @ApiProperty({ description: '유저 id' })
-  user: string;
+  // @ApiProperty({ description: '유저 id' })
+  // user: string;
 }

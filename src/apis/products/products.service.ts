@@ -14,12 +14,11 @@ export class ProductsService {
     private readonly productImageRepository: Repository<ProductImage>,
   ) {}
 
-  async create({ createProductInput, files }) {
+
+  async create({ userId, createProductInput, files }) {
     if (!files) {
       throw new BadRequestException('파일을 업로드해 주세요.');
     }
-
-    console.log(files);
 
     const imgurl: string[] = [];
 
@@ -30,15 +29,15 @@ export class ProductsService {
       }),
     );
 
-    const { productCategory, user, ...product } = createProductInput;
-    console.log('act');
+    const { productCategory, ...product } = createProductInput;
+
     const result = await this.productRepository.save({
       ...product,
       productCategory: {
         id: productCategory,
       },
       user: {
-        id: user,
+        id: userId,
       },
     });
 

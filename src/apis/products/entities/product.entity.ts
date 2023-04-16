@@ -9,6 +9,7 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -61,6 +62,7 @@ export class Product {
   productCategory: ProductCategory;
 
   @ManyToOne(() => User)
+  @JoinColumn()
   user: User;
 
   @OneToMany(() => ProductImage, (productImage) => productImage.product, {

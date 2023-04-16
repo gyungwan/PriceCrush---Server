@@ -17,13 +17,6 @@ const product_category_entity_1 = require("../../product-category/entities/produ
 const productImage_entity_1 = require("../../productImage/entities/productImage.entity");
 const user_entity_1 = require("../../users/entities/user.entity");
 const typeorm_1 = require("typeorm");
-var ProductStatus;
-(function (ProductStatus) {
-    ProductStatus[ProductStatus["CANCEL"] = -1] = "CANCEL";
-    ProductStatus[ProductStatus["WAITING"] = 0] = "WAITING";
-    ProductStatus[ProductStatus["SELLING"] = 1] = "SELLING";
-    ProductStatus[ProductStatus["SOLD_OUT"] = 2] = "SOLD_OUT";
-})(ProductStatus || (ProductStatus = {}));
 let Product = class Product {
 };
 __decorate([
@@ -58,11 +51,6 @@ __decorate([
     __metadata("design:type", Date)
 ], Product.prototype, "end_date", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: ProductStatus.WAITING }),
-    (0, swagger_1.ApiProperty)({ description: '상품상태값' }),
-    __metadata("design:type", Number)
-], Product.prototype, "status", void 0);
-__decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     (0, swagger_1.ApiProperty)({ description: '상품 삭제 일/시' }),
     __metadata("design:type", Date)
@@ -73,6 +61,7 @@ __decorate([
 ], Product.prototype, "productCategory", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.User),
+    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", user_entity_1.User)
 ], Product.prototype, "user", void 0);
 __decorate([

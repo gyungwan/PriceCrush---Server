@@ -41,7 +41,17 @@ let AuthController = class AuthController {
         this.authService.setRefreshService({ user, res });
         const accessToken = this.authService.getAccesstoken({ user });
         console.log(accessToken);
-        return accessToken;
+        return {
+            accessToken,
+            user: {
+                email: user.email,
+                phone: user.phone,
+                nickname: user.nickname,
+                address: user.address,
+                name: user.name,
+                favorites: user.favorites,
+            },
+        };
     }
     async restoreAccessToken(req) {
         const { user } = req;

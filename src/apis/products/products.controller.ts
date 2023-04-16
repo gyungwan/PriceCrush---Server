@@ -12,6 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBody,
   ApiOperation,
   ApiProperty,
   ApiResponse,
@@ -30,12 +31,17 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   //----------------- 생성 -----------------------//
-  //@UseGuards(RestAuthAccessGuard)
+  @UseGuards(RestAuthAccessGuard)
   @Post('/')
   @UseInterceptors(FilesInterceptor('files', 10))
   @ApiOperation({
     summary: '상품 생성',
     description: '상품 생성 API',
+  })
+  @ApiBody({
+    description:
+      'form-data로 넘겨주세요. accessToken을 함께 넘겨줘야합니다. createProductInput에 상품 정보를 넣고, 이미지를 따로 넘겨주세요. postman예시는 카톡으로 드리겠습니다. ',
+    type: CreateProductInput,
   })
   @ApiResponse({
     type: Product,
@@ -47,9 +53,13 @@ export class ProductsController {
   ) {
     const createProductInput = JSON.parse(createproductRequest);
     const userId = req.user.id;
-    return await this.productsService.create({ userId, createProductInput, files });
+    console.log(userId);
+    return await this.productsService.create({
+      userId,
+      createProductInput,
+      files,
+    });
   }
-   
 
   //----------------- 전체상품조회 -----------------------//
   // 하나의 api로 여러개의 옵션을 주는 방향이 나은가?

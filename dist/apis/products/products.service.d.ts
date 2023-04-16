@@ -1,13 +1,12 @@
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { ProductImage } from '../productImage/entities/productImage.entity';
-import { FileController } from '../fileupload/fileupload.controller';
 export declare class ProductsService {
     private readonly productRepository;
     private readonly productImageRepository;
-    private readonly fileController;
-    constructor(productRepository: Repository<Product>, productImageRepository: Repository<ProductImage>, fileController: FileController);
-    create({ createProductInput, files }: {
+    constructor(productRepository: Repository<Product>, productImageRepository: Repository<ProductImage>);
+    create({ userId, createProductInput, files }: {
+        userId: any;
         createProductInput: any;
         files: any;
     }): Promise<any>;

@@ -7,7 +7,17 @@ export declare class AuthController {
     private readonly authService;
     private readonly usersService;
     constructor(authService: AuthService, usersService: UsersService);
-    login(loginDto: LoginDto, res: Response): Promise<string>;
+    login(loginDto: LoginDto, res: Response): Promise<{
+        accessToken: string;
+        user: {
+            email: string;
+            phone: string;
+            nickname: string;
+            address: string;
+            name: string;
+            favorites: string;
+        };
+    }>;
     restoreAccessToken(req: any): Promise<string>;
     sendsms(smsDto: SmsDto): Promise<{
         status: {

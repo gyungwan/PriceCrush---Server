@@ -35,13 +35,6 @@ export class AuctionGateway
     console.log(`Client disconnected: ${client.id}`);
   }
 
-  @SubscribeMessage('join-page')
-  handleJoinPageRoom(client: Socket, data: { prod_id: string }) {
-    console.log(data);
-    console.log(`Client ${client.id} join to room ${data[0].prod_id}`);
-    this.auctionService.joinPageRoom(client, data[0].prod_id);
-  }
-
   @SubscribeMessage('bid')
   handleBid(
     client: Socket,

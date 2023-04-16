@@ -13,6 +13,7 @@ class jwtAccessStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.
     validate(payload) {
         console.log(payload);
         return {
+            id: payload.id,
             email: payload.email,
         };
     }

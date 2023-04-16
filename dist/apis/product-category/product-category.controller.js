@@ -17,15 +17,17 @@ const common_1 = require("@nestjs/common");
 const product_category_service_1 = require("./product-category.service");
 const swagger_1 = require("@nestjs/swagger");
 const product_category_entity_1 = require("./entities/product-category.entity");
+const platform_express_1 = require("@nestjs/platform-express");
 let ProductCategoryController = class ProductCategoryController {
     constructor(productCategoryService) {
         this.productCategoryService = productCategoryService;
     }
-    async createCategory(body) {
-        const name = body.name;
+    async createCategory(body, file) {
+        const JsonBady = JSON.parse(body);
+        const name = JsonBady.name;
         if (name === undefined)
             throw new common_1.UnauthorizedException('카테고리 이름을 입력해주세요');
-        return await this.productCategoryService.create({ name });
+        return await this.productCategoryService.create({ name }, file);
     }
     getCategory() {
         return this.productCategoryService.findAll();
@@ -40,6 +42,7 @@ let ProductCategoryController = class ProductCategoryController {
 };
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     (0, swagger_1.ApiOperation)({
         summary: '상품 카테고리 생성',
         description: '상품 카테고리 생성 API',
@@ -55,9 +58,10 @@ __decorate([
             },
         },
     }),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Body)('body')),
+    __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ProductCategoryController.prototype, "createCategory", null);
 __decorate([

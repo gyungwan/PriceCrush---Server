@@ -24,6 +24,11 @@ __decorate([
     (0, swagger_1.ApiProperty)({ description: '카테고리명' }),
     __metadata("design:type", String)
 ], ProductCategory.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: '' }),
+    (0, swagger_1.ApiProperty)({ description: '카테고리 이미지 url' }),
+    __metadata("design:type", String)
+], ProductCategory.prototype, "imgurl", void 0);
 ProductCategory = __decorate([
     (0, typeorm_1.Entity)()
 ], ProductCategory);

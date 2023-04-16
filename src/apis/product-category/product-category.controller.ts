@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UnauthorizedException,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProductCategoryService } from './product-category.service';
 
@@ -18,6 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ProductCategory } from './entities/product-category.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('product-category')
 @ApiTags('상품 카테고리 API')
@@ -27,6 +30,7 @@ export class ProductCategoryController {
   ) {}
 
   @Post()
+  @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({
     summary: '상품 카테고리 생성',
     description: '상품 카테고리 생성 API',
@@ -42,11 +46,15 @@ export class ProductCategoryController {
       },
     },
   })
-  async createCategory(@Body() body): Promise<ProductCategory> {
-    const name = body.name;
+  async createCategory(
+    @Body('body') body: string,
+    @UploadedFile() file: Express.MulterS3.File,
+  ): Promise<ProductCategory> {
+    const JsonBady = JSON.parse(body);
+    const name = JsonBady.name;
     if (name === undefined)
       throw new UnauthorizedException('카테고리 이름을 입력해주세요');
-    return await this.productCategoryService.create({ name });
+    return await this.productCategoryService.create({ name }, file);
   }
 
   @Get()

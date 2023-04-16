@@ -76,10 +76,6 @@ export class FileController {
         imgurl.push(key);
       }),
     );
-    return {
-      statusCode: 201,
-      message: '이미지 등록 성공',
-      data: imgurl,
-    };
+    return imgurl;
   }
 }

@@ -19,12 +19,13 @@ const create_product_1 = require("./dto/create.product");
 const update_product_1 = require("./dto/update.product");
 const products_service_1 = require("./products.service");
 const product_entity_1 = require("./entities/product.entity");
+const platform_express_1 = require("@nestjs/platform-express");
 let ProductsController = class ProductsController {
     constructor(productsService) {
         this.productsService = productsService;
     }
-    async createProduct(createProductInput) {
-        return await this.productsService.create({ createProductInput });
+    async createProduct(createProductInput, files) {
+        return await this.productsService.create({ createProductInput, files });
     }
     async getProducts() {
         return await this.productsService.findAll();
@@ -44,6 +45,7 @@ let ProductsController = class ProductsController {
 };
 __decorate([
     (0, common_1.Post)('/'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('file', 10)),
     (0, swagger_1.ApiOperation)({
         summary: '상품 생성',
         description: '상품 생성 API',
@@ -52,8 +54,9 @@ __decorate([
         type: product_entity_1.Product,
     }),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_product_1.CreateProductInput]),
+    __metadata("design:paramtypes", [create_product_1.CreateProductInput, Object]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "createProduct", null);
 __decorate([

@@ -6,8 +6,10 @@ import {
   Param,
   Post,
   Put,
+  UploadedFiles,
   Request,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -20,6 +22,7 @@ import { UpdateProductInput } from './dto/update.product';
 import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
 import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('product')
 @ApiTags('상품 API')
@@ -29,6 +32,7 @@ export class ProductsController {
   //----------------- 생성 -----------------------//
   //@UseGuards(RestAuthAccessGuard)
   @Post('/')
+  @UseInterceptors(FilesInterceptor('files', 10))
   @ApiOperation({
     summary: '상품 생성',
     description: '상품 생성 API',
@@ -37,12 +41,15 @@ export class ProductsController {
     type: Product,
   })
   async createProduct(
+    @Body('createproductRequest') createproductRequest: string,
     @Request() req,
-    @Body() createProductInput: CreateProductInput,
+    @UploadedFiles() files: Express.MulterS3.File,
   ) {
+    const createProductInput = JSON.parse(createproductRequest);
     const userId = req.user.id;
-    return await this.productsService.create({ userId, createProductInput });
+    return await this.productsService.create({ userId, createProductInput, files });
   }
+   
 
   //----------------- 전체상품조회 -----------------------//
   // 하나의 api로 여러개의 옵션을 주는 방향이 나은가?

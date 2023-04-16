@@ -28,11 +28,16 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const product_entity_1 = require("./entities/product.entity");
+const productImage_entity_1 = require("../productImage/entities/productImage.entity");
+const fileupload_controller_1 = require("../fileupload/fileupload.controller");
 let ProductsService = class ProductsService {
-    constructor(productRepository) {
+    constructor(productRepository, productImageRepository, fileController) {
         this.productRepository = productRepository;
+        this.productImageRepository = productImageRepository;
+        this.fileController = fileController;
     }
-    async create({ createProductInput }) {
+    async create({ createProductInput, files }) {
+        const img = await this.fileController.uploadFiles(files);
         const { productCategory, user } = createProductInput, product = __rest(createProductInput, ["productCategory", "user"]);
         console.log('act');
         const result = await this.productRepository.save(Object.assign(Object.assign({}, product), { productCategory: {
@@ -40,6 +45,11 @@ let ProductsService = class ProductsService {
             }, user: {
                 id: user,
             } }));
+        await Promise.all(img.map((el, i) => this.productImageRepository.save({
+            url: el,
+            is_main: i === 0 ? true : false,
+            product: Object.assign({}, result),
+        })));
         return result;
     }
     async findAll() {
@@ -49,7 +59,7 @@ let ProductsService = class ProductsService {
         return result;
     }
     async find({ productId }) {
-        const result = await this.productRepository.find({
+        const result = await this.productRepository.findOne({
             where: { id: productId },
         });
         return result;
@@ -73,7 +83,10 @@ let ProductsService = class ProductsService {
 ProductsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(product_entity_1.Product)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(productImage_entity_1.ProductImage)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        fileupload_controller_1.FileController])
 ], ProductsService);
 exports.ProductsService = ProductsService;
 //# sourceMappingURL=products.service.js.map

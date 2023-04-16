@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -11,8 +11,15 @@ export class ProductCategoryService {
     private readonly productCategoryRepository: Repository<ProductCategory>,
   ) {}
 
-  async create({ name }) {
-    return await this.productCategoryRepository.save({ name });
+  async create({ name }, file: Express.MulterS3.File) {
+    if (!file) {
+      throw new BadRequestException('파일을 업로드 해세요.');
+    }
+    const imgurl = file.location;
+    return await this.productCategoryRepository.save({
+      name,
+      imgurl,
+    });
   }
 
   async findAll() {

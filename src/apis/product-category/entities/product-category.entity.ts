@@ -11,4 +11,8 @@ export class ProductCategory {
   @Column({ default: '' })
   @ApiProperty({ description: '카테고리명' })
   name: string;
+
+  @Column({ default: '' })
+  @ApiProperty({ description: '카테고리 이미지 url' })
+  imgurl: string;
 }

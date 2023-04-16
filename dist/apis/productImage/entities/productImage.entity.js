@@ -19,7 +19,7 @@ __decorate([
     __metadata("design:type", String)
 ], ProductImage.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: '' }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], ProductImage.prototype, "url", void 0);
 __decorate([

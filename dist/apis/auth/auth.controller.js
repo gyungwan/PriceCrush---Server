@@ -24,6 +24,7 @@ const certification_code_dto_1 = require("./dto/certification-code.dto");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const login_dto_1 = require("./dto/login.dto");
 const sms_dto_1 = require("./dto/sms.dto");
+const login_return_dto_1 = require("./dto/login-return.dto");
 let AuthController = class AuthController {
     constructor(authService, usersService) {
         this.authService = authService;
@@ -49,7 +50,6 @@ let AuthController = class AuthController {
                 nickname: user.nickname,
                 address: user.address,
                 name: user.name,
-                favorites: user.favorites,
             },
         };
     }
@@ -80,7 +80,7 @@ __decorate([
         description: '유저 로그인 API',
     }),
     (0, swagger_1.ApiResponse)({
-        description: 'access token, refresh token이 리턴됩니다',
+        type: login_return_dto_1.LoginReturnDto,
     }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),

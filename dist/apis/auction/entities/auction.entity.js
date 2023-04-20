@@ -23,7 +23,7 @@ __decorate([
 ], Auction.prototype, "id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: '상품 아이디' }),
-    (0, typeorm_1.ManyToOne)(() => product_entity_1.Product),
+    (0, typeorm_1.ManyToOne)(() => product_entity_1.Product, { eager: true }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", product_entity_1.Product)
 ], Auction.prototype, "product", void 0);

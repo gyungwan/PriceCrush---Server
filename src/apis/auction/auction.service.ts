@@ -39,6 +39,20 @@ export class AuctionService {
     return auction;
   }
 
+  async joinMyAuctionRoom(client: Socket, email: string) {
+    const auctions = await this.auctionRepository.find({
+      where: {
+        user: { email },
+      },
+    });
+    console.log(auctions);
+    auctions.forEach((auction) => {
+      client.join(`auction-${auction.product.id}`);
+    });
+
+    return;
+  }
+
   async findAllAuctions({ productId }): Promise<Auction[]> {
     return await this.auctionRepository.find({ where: { product: productId } });
   }

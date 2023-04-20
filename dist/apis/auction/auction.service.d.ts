@@ -15,6 +15,7 @@ export declare class AuctionService {
         productId: any;
         userId: any;
     }): Promise<Auction>;
+    joinMyAuctionRoom(client: Socket, email: string): Promise<void>;
     findAllAuctions({ productId }: {
         productId: any;
     }): Promise<Auction[]>;

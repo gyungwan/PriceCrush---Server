@@ -3,21 +3,12 @@ import { AuthService } from './auth.service';
 import { CertificationCodeDto } from './dto/certification-code.dto';
 import { LoginDto } from './dto/login.dto';
 import { SmsDto } from './dto/sms.dto';
+import { LoginReturnDto } from './dto/login-return.dto';
 export declare class AuthController {
     private readonly authService;
     private readonly usersService;
     constructor(authService: AuthService, usersService: UsersService);
-    login(loginDto: LoginDto, res: Response): Promise<{
-        accessToken: string;
-        user: {
-            email: string;
-            phone: string;
-            nickname: string;
-            address: string;
-            name: string;
-            favorites: string;
-        };
-    }>;
+    login(loginDto: LoginDto, res: Response): Promise<LoginReturnDto>;
     restoreAccessToken(req: any): Promise<string>;
     sendsms(smsDto: SmsDto): Promise<{
         status: {

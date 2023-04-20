@@ -21,7 +21,12 @@ let AuctionGateway = class AuctionGateway {
     afterInit() {
         console.log('Initialized');
     }
-    handleConnection(client, ...args) {
+    async handleConnection(client, ...args) {
+        const email_obj = client.handshake.headers.cookie;
+        if (email_obj) {
+            const { email } = JSON.parse(email_obj);
+            await this.auctionService.joinMyAuctionRoom(client, email);
+        }
         console.log(`Client connected: ${client.id}`);
     }
     handleDisconnect(client) {

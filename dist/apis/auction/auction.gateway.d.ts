@@ -6,7 +6,7 @@ export declare class AuctionGateway implements OnGatewayInit, OnGatewayConnectio
     server: Server;
     constructor(auctionService: AuctionService);
     afterInit(): void;
-    handleConnection(client: Socket, ...args: any[]): void;
+    handleConnection(client: Socket, ...args: any[]): Promise<void>;
     handleDisconnect(client: Socket): void;
     handleBid(client: Socket, data: {
         prod_id: string;

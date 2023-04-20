@@ -27,7 +27,14 @@ export class AuctionGateway
     console.log('Initialized');
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket, ...args: any[]) {
+    const email_obj = client.handshake.headers.cookie;
+    if (email_obj) {
+      const { email } = JSON.parse(email_obj);
+      await this.auctionService.joinMyAuctionRoom(client, email);
+    }
+
+    // await this.auctionService.findMyAuctionRoom({ productId });
     console.log(`Client connected: ${client.id}`);
   }
 

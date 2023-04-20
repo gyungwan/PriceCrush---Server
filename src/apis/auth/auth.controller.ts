@@ -17,6 +17,7 @@ import bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { RestAuthRefreshGuard } from 'src/common/auth/rest-auth-guards';
 import { SmsDto } from './dto/sms.dto';
+import { LoginReturnDto } from './dto/login-return.dto';
 
 @Controller('auth')
 @ApiTags('인증 API')
@@ -32,13 +33,13 @@ export class AuthController {
     description: '유저 로그인 API',
   })
   @ApiResponse({
-    description: 'access token, refresh token이 리턴됩니다',
+    type: LoginReturnDto,
     // type: CreateUserResponseDto,
   })
   async login(
     @Body() loginDto: LoginDto, //
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<LoginReturnDto> {
     const user = await this.usersService.findOne({ email: loginDto.email });
     if (!user) {
       throw new UnprocessableEntityException(
@@ -62,7 +63,6 @@ export class AuthController {
         nickname: user.nickname,
         address: user.address,
         name: user.name,
-        favorites: user.favorites,
       },
     };
   }

@@ -41,6 +41,18 @@ let AuctionService = class AuctionService {
         });
         return auction;
     }
+    async joinMyAuctionRoom(client, email) {
+        const auctions = await this.auctionRepository.find({
+            where: {
+                user: { email },
+            },
+        });
+        console.log(auctions);
+        auctions.forEach((auction) => {
+            client.join(`auction-${auction.product.id}`);
+        });
+        return;
+    }
     async findAllAuctions({ productId }) {
         return await this.auctionRepository.find({ where: { product: productId } });
     }

@@ -76,7 +76,10 @@ export class AuctionService {
     // 들어가야 하는 조건
     // 1. product가 존재해야 함.
     const product = await this.productService.find({ productId: data.product });
-    if (!product) return;
+    if (!product) {
+      console.log(product);
+      return;
+    }
 
     // 2. product가 auction이 진행중이어야 함.(now 가 product에서 가져온 start_date과 end_date 사이에 있어야함)
     let now = new Date();
@@ -97,6 +100,7 @@ export class AuctionService {
 
     // 4. 새로운 가격이 기존 가격보다 높은지 확인
     let auctionResult = {};
+    console.log(data.price, currentPrice);
     if (data.price > currentPrice) {
       // 5. 이전 경매 내역이 있으면 업데이트, 없으면 신규 값 저장
       if (!myAuction) {
@@ -105,12 +109,13 @@ export class AuctionService {
           user: { id: data.user },
           price: data.price,
         });
+        await client.join(`auction-${product.id}`);
       } else {
         Object.assign(myAuction, { price: data.price, update_dt: new Date() });
         console.log(myAuction);
         auctionResult = await this.auctionRepository.save(myAuction);
       }
-      await client.join(`auction-${product.id}`);
+
       client
         // .to(`product-${product.id}`)
         // .to(`auction-${product.id}`)

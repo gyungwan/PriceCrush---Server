@@ -12,5 +12,5 @@ export declare class AuctionGateway implements OnGatewayInit, OnGatewayConnectio
         prod_id: string;
         user_id: string;
         price: number;
-    }): void;
+    }): Promise<void>;
 }

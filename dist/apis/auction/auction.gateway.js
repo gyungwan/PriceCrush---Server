@@ -32,10 +32,10 @@ let AuctionGateway = class AuctionGateway {
     handleDisconnect(client) {
         console.log(`Client disconnected: ${client.id}`);
     }
-    handleBid(client, data) {
+    async handleBid(client, data) {
         console.log(`Client ${client.id} bid with ${data[0].price}`);
         console.log(data[0]);
-        this.auctionService.bid(client, data[0]);
+        await this.auctionService.bid(client, data[0]);
     }
 };
 __decorate([
@@ -46,10 +46,15 @@ __decorate([
     (0, websockets_1.SubscribeMessage)('bid'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], AuctionGateway.prototype, "handleBid", null);
 AuctionGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)({ namespace: 'auction' }),
+    (0, websockets_1.WebSocketGateway)({
+        cors: {
+            origin: ['https://price-crush-client.vercel.app', 'http://localhost:3000'],
+        },
+        namespace: '/auction',
+    }),
     (0, swagger_1.ApiTags)('WebSockets'),
     __metadata("design:paramtypes", [auction_service_1.AuctionService])
 ], AuctionGateway);

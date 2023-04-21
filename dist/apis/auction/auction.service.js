@@ -58,8 +58,10 @@ let AuctionService = class AuctionService {
     }
     async bid(client, data) {
         const product = await this.productService.find({ productId: data.product });
-        if (!product)
+        if (!product) {
+            console.log(product);
             return;
+        }
         let now = new Date();
         now = new Date(now.setHours(now.getHours() + 9));
         const isLive = now > product.start_date && now <= product.end_date;
@@ -74,6 +76,7 @@ let AuctionService = class AuctionService {
         console.log('myAuction:', myAuction);
         const currentPrice = auction ? auction.price : product.start_price;
         let auctionResult = {};
+        console.log(data.price, currentPrice);
         if (data.price > currentPrice) {
             if (!myAuction) {
                 auctionResult = await this.auctionRepository.save({
@@ -81,13 +84,13 @@ let AuctionService = class AuctionService {
                     user: { id: data.user },
                     price: data.price,
                 });
+                await client.join(`auction-${product.id}`);
             }
             else {
                 Object.assign(myAuction, { price: data.price, update_dt: new Date() });
                 console.log(myAuction);
                 auctionResult = await this.auctionRepository.save(myAuction);
             }
-            await client.join(`auction-${product.id}`);
             client
                 .emit('bidResult', {
                 success: true,

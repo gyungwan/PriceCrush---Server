@@ -13,7 +13,12 @@ import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
 import { ApiTags } from '@nestjs/swagger';
 
 // localhost:3000/auction로 요청을 보내면 이 gateway가 작동한다.
-@WebSocketGateway({ namespace: 'auction' })
+@WebSocketGateway({
+  cors: {
+    origin: ['https://price-crush-client.vercel.app', 'http://localhost:3000'],
+  },
+  namespace: '/auction',
+})
 @ApiTags('WebSockets')
 export class AuctionGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -43,12 +48,12 @@ export class AuctionGateway
   }
 
   @SubscribeMessage('bid')
-  handleBid(
+  async handleBid(
     client: Socket,
     data: { prod_id: string; user_id: string; price: number },
   ) {
     console.log(`Client ${client.id} bid with ${data[0].price}`);
     console.log(data[0]);
-    this.auctionService.bid(client, data[0]);
+    await this.auctionService.bid(client, data[0]);
   }
 }

@@ -5,6 +5,8 @@ import {
   OnGatewayInit,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { AuctionService } from './auction.service';
@@ -49,11 +51,13 @@ export class AuctionGateway
 
   @SubscribeMessage('bid')
   async handleBid(
+    @ConnectedSocket()
     client: Socket,
+    @MessageBody()
     data: { prod_id: string; user_id: string; price: number },
   ) {
-    console.log(`Client ${client.id} bid with ${data[0].price}`);
-    console.log(data[0]);
+    console.log(`Client ${client.id} bid with ${data.price}`);
+    console.log('data: ', data[0]);
     await this.auctionService.bid(client, data[0]);
   }
 }

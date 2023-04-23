@@ -53,13 +53,11 @@ export class AuctionGateway
   async handleBid(
     @ConnectedSocket()
     client: Socket,
-
-    data: string, // JSON 문자열로 받도록 수정
+    @MessageBody() data: any,
   ) {
-    const parsedData = JSON.parse(data); // JSON 문자열 파싱
-    console.log(`Client ${client.id} bid with ${parsedData.price}`);
-    console.log(parsedData);
-    await this.auctionService.bid(client, parsedData); // 파싱된 데이터를 사용하여 서비스 메서드를 호출
+    console.log(`Client ${client.id} bid with ${data.price}`);
+    console.log(data);
+    await this.auctionService.bid(client, data); // 파싱된 데이터를 사용하여 서비스 메서드를 호출
   }
 
   @SubscribeMessage('test')

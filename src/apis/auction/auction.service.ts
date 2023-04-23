@@ -138,4 +138,9 @@ export class AuctionService {
       });
     }
   }
+
+  async test(client: Socket, data) {
+    console.log(data);
+    client.emit('test', { message: 'test' });
+  }
 }

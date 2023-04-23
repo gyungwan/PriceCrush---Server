@@ -65,7 +65,6 @@ export class AuctionService {
   // room을 productId로 하고, socket을 room에 join시키고, bid를 하면 room에 있는 모든 socket에게 broadcast
 
   async bid(client: Socket, parsedData) {
-
     // 0. auction을 진행하는 product의 존재여부를 확인함.
     // 1. bid를 하게 될 경우 내역을 DB에 저장함.
     // 2. bid를 하게 될 경우, 현재 입찰가보다 높은지 여부에 따라 입찰에 성공했는지 실패했는지를 socket에게 emit

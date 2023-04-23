@@ -63,7 +63,9 @@ export class AuctionService {
   // auctionRoom은 productId가 room의 고유값이 되고, 입찰시에 room에 join되고, 상품 입찰 종료시에 room에서 leave
 
   // room을 productId로 하고, socket을 room에 join시키고, bid를 하면 room에 있는 모든 socket에게 broadcast
+
   async bid(client: Socket, parsedData) {
+
     // 0. auction을 진행하는 product의 존재여부를 확인함.
     // 1. bid를 하게 될 경우 내역을 DB에 저장함.
     // 2. bid를 하게 될 경우, 현재 입찰가보다 높은지 여부에 따라 입찰에 성공했는지 실패했는지를 socket에게 emit
@@ -73,20 +75,22 @@ export class AuctionService {
 
     // 들어가야 하는 조건
     // 1. product가 존재해야 함.
+
     console.log('parsedData:', parsedData);
     const product = await this.productService.find({
       productId: parsedData.product,
     });
+
     if (!product) {
       console.log(product);
       return;
     }
 
     // 2. product가 auction이 진행중이어야 함.(now 가 product에서 가져온 start_date과 end_date 사이에 있어야함)
-    // let now = new Date();
-    // now = new Date(now.setHours(now.getHours() + 9));
-    // const isLive = now > product.start_date && now <= product.end_date;
-    // if (!isLive) return;
+    let now = new Date();
+    now = new Date(now.setHours(now.getHours() + 9));
+    const isLive = now > product.start_date && now <= product.end_date;
+    if (!isLive) return;
 
     // 3. auction DB에서 product에 해당하는 auction을 가져옴.
     // const auctions = await this.findAllAuctions({ productId: data.product });

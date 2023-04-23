@@ -60,5 +60,5 @@ export class AuctionGateway
     console.log(`Client ${client.id} bid with ${parsedData.price}`);
     console.log(parsedData);
     await this.auctionService.bid(client, parsedData); // 파싱된 데이터를 사용하여 서비스 메서드를 호출
-
+    }
 }

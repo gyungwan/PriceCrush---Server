@@ -48,6 +48,7 @@ export class AuctionService {
     console.log(auctions);
     auctions.forEach((auction) => {
       client.join(`auction-${auction.product.id}`);
+      console.log(`Client ${client.id} joined auction-${auction.product.id}`);
     });
 
     return;
@@ -85,7 +86,6 @@ export class AuctionService {
     let now = new Date();
     now = new Date(now.setHours(now.getHours() + 9));
     const isLive = now > product.start_date && now <= product.end_date;
-    console.log(isLive);
     if (!isLive) return;
 
     // 3. auction DB에서 product에 해당하는 auction을 가져옴.
@@ -95,7 +95,6 @@ export class AuctionService {
       productId: product.id,
       userId: data.user,
     });
-    console.log('myAuction:', myAuction);
     const currentPrice = auction ? auction.price : product.start_price;
 
     // 4. 새로운 가격이 기존 가격보다 높은지 확인
@@ -112,12 +111,11 @@ export class AuctionService {
         await client.join(`auction-${product.id}`);
       } else {
         Object.assign(myAuction, { price: data.price, update_dt: new Date() });
-        console.log(myAuction);
         auctionResult = await this.auctionRepository.save(myAuction);
       }
-
+      console.log('client.rooms');
+      console.log(client.rooms);
       client
-        // .to(`product-${product.id}`)
         // .to(`auction-${product.id}`)
         .emit('bidResult', {
           success: true,

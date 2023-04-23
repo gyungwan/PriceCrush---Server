@@ -50,6 +50,7 @@ let AuctionService = class AuctionService {
         console.log(auctions);
         auctions.forEach((auction) => {
             client.join(`auction-${auction.product.id}`);
+            console.log(`Client ${client.id} joined auction-${auction.product.id}`);
         });
         return;
     }
@@ -65,7 +66,6 @@ let AuctionService = class AuctionService {
         let now = new Date();
         now = new Date(now.setHours(now.getHours() + 9));
         const isLive = now > product.start_date && now <= product.end_date;
-        console.log(isLive);
         if (!isLive)
             return;
         const auction = await this.findOneAuction({ productId: product.id });
@@ -73,7 +73,6 @@ let AuctionService = class AuctionService {
             productId: product.id,
             userId: data.user,
         });
-        console.log('myAuction:', myAuction);
         const currentPrice = auction ? auction.price : product.start_price;
         let auctionResult = {};
         console.log(data.price, currentPrice);
@@ -88,9 +87,10 @@ let AuctionService = class AuctionService {
             }
             else {
                 Object.assign(myAuction, { price: data.price, update_dt: new Date() });
-                console.log(myAuction);
                 auctionResult = await this.auctionRepository.save(myAuction);
             }
+            console.log('client.rooms');
+            console.log(client.rooms);
             client
                 .emit('bidResult', {
                 success: true,

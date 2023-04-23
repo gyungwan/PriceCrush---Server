@@ -52,8 +52,8 @@ export class AuctionGateway
     client: Socket,
     data: { prod_id: string; user_id: string; price: number },
   ) {
-    console.log(`Client ${client.id} bid with ${data.price}`);
-    console.log(data);
-    await this.auctionService.bid(client, { data });
+    console.log(`Client ${client.id} bid with ${data[0].price}`);
+    console.log(data[0]);
+    await this.auctionService.bid(client, data[0]);
   }
 }

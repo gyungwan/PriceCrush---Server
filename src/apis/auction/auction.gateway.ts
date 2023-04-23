@@ -63,12 +63,13 @@ export class AuctionGateway
   }
 
   @SubscribeMessage('test')
-  handleTest(
+  async handleTest(
     @ConnectedSocket()
     client: Socket,
     @MessageBody() data: any,
   ) {
     console.log('data: ', data);
+    await this.auctionService.test(client, data);
     return data;
   }
 }

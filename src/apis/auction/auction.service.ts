@@ -3,7 +3,7 @@ import { CreateAuctionDto } from './dto/create-auction.dto';
 import { UpdateAuctionDto } from './dto/update-auction.dto';
 import { AuctionInterface } from './interfaces/auction.interface';
 import { Socket } from 'socket.io';
-import { Repository } from 'typeorm';
+import { LessThan, MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auction } from './entities/auction.entity';
 import { ProductsService } from '../products/products.service';
@@ -43,6 +43,9 @@ export class AuctionService {
     const auctions = await this.auctionRepository.find({
       where: {
         user: { email },
+        product: {
+          end_date: MoreThan(new Date()),
+        },
       },
     });
     console.log(auctions);

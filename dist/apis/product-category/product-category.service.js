@@ -17,9 +17,12 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const product_category_entity_1 = require("./entities/product-category.entity");
+const client_s3_1 = require("@aws-sdk/client-s3");
+const config_1 = require("@nestjs/config");
 let ProductCategoryService = class ProductCategoryService {
-    constructor(productCategoryRepository) {
+    constructor(productCategoryRepository, configService) {
         this.productCategoryRepository = productCategoryRepository;
+        this.configService = configService;
     }
     async create({ name }, file) {
         if (!file) {
@@ -38,13 +41,36 @@ let ProductCategoryService = class ProductCategoryService {
         return await this.productCategoryRepository.save({ id: id, name: name });
     }
     async remove(id) {
-        return await this.productCategoryRepository.delete({ id: id });
+        const category = await this.productCategoryRepository.findOne({
+            where: { id },
+        });
+        const s3 = new client_s3_1.S3Client({
+            region: this.configService.get('AWS_BUCKET_REGION'),
+            credentials: {
+                accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
+                secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY'),
+            },
+        });
+        const fileKey = `${category.imgurl}`;
+        try {
+            await s3.send(new client_s3_1.DeleteObjectCommand({
+                Bucket: this.configService.get('AWS_BUCKET_NAME'),
+                Key: fileKey,
+            }));
+            await this.productCategoryRepository.delete({ id: id });
+            return { message: '이미지 삭제 성공' };
+        }
+        catch (error) {
+            console.error(error);
+            throw new common_1.InternalServerErrorException();
+        }
     }
 };
 ProductCategoryService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(product_category_entity_1.ProductCategory)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        config_1.ConfigService])
 ], ProductCategoryService);
 exports.ProductCategoryService = ProductCategoryService;
 //# sourceMappingURL=product-category.service.js.map

@@ -1,14 +1,20 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import { ProductCategory } from './entities/product-category.entity';
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ProductCategoryService {
   constructor(
     @InjectRepository(ProductCategory)
     private readonly productCategoryRepository: Repository<ProductCategory>,
+    private readonly configService: ConfigService,
   ) {}
 
   async create({ name }, file: Express.MulterS3.File) {
@@ -31,6 +37,32 @@ export class ProductCategoryService {
   }
 
   async remove(id: string) {
-    return await this.productCategoryRepository.delete({ id: id });
+    const category = await this.productCategoryRepository.findOne({
+      where: { id },
+    });
+
+    const s3 = new S3Client({
+      region: this.configService.get('AWS_BUCKET_REGION'),
+      credentials: {
+        accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
+        secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY'),
+      },
+    });
+
+    const fileKey = category.imgurl;
+    try {
+      // S3 스토리지에서 파일 삭제
+      await s3.send(
+        new DeleteObjectCommand({
+          Bucket: this.configService.get('AWS_BUCKET_NAME'),
+          Key: fileKey,
+        }),
+      );
+      await this.productCategoryRepository.delete({ id: id });
+      return { message: '이미지 삭제 성공' };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException();
+    }
   }
 }

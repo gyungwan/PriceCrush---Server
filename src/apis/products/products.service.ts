@@ -55,6 +55,18 @@ export class ProductsService {
     );
     return result;
   }
+  async search(query: string) {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.productCategory', 'productCategory')
+      .where('product.name LIKE :query OR product.desc LIKE :query', {
+        query: `%${query}%`,
+      })
+      .orWhere('productCategory.name LIKE :category', {
+        category: `%${query}%`,
+      })
+      .getMany();
+  }
 
   async findAll() {
     // const result = await this.productRepository.find({where:{}});

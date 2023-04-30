@@ -49,13 +49,20 @@ export class ProductCategoryService {
       },
     });
 
-    const fileKey = category.imgurl;
+    // URL에서 파일 경로 추출
+    const urlObj = new URL(category.imgurl);
+    const filePath = urlObj.pathname;
+
+    // 파일 경로에서 파일명 추출
+    const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+    console.log(fileName);
+
     try {
       // S3 스토리지에서 파일 삭제
       await s3.send(
         new DeleteObjectCommand({
           Bucket: this.configService.get('AWS_BUCKET_NAME'),
-          Key: fileKey,
+          Key: fileName,
         }),
       );
       await this.productCategoryRepository.delete({ id: id });

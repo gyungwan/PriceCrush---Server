@@ -49,22 +49,15 @@ export class ProductCategoryService {
       },
     });
 
-    // URL에서 파일 경로 추출
-    const urlObj = new URL(category.imgurl);
-    const filePath = urlObj.pathname;
-
-    // 파일 경로에서 파일명 추출
-    const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
-    console.log(fileName);
-
     try {
       // S3 스토리지에서 파일 삭제
-      await s3.send(
+      const data = await s3.send(
         new DeleteObjectCommand({
           Bucket: this.configService.get('AWS_BUCKET_NAME'),
-          Key: fileName,
+          Key: category.imgurl,
         }),
       );
+      console.log(data);
       await this.productCategoryRepository.delete({ id: id });
       return { message: '이미지 삭제 성공' };
     } catch (error) {

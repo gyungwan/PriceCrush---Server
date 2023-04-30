@@ -91,7 +91,7 @@ export class AuthController {
   })
   @ApiResponse({
     description: '발송 성공 여부가 리턴됩니다',
-    // type: CreateUserResponseDto,
+    //type: CreateUserResponseDto,
   })
   sendsms(@Body() smsDto: SmsDto) {
     const phone = smsDto.phone;

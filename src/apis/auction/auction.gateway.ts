@@ -53,10 +53,11 @@ export class AuctionGateway
   async handleBid(
     @ConnectedSocket()
     client: Socket,
-    @MessageBody() data: any,
+    @MessageBody()
+    data: any,
   ) {
-    console.log(`Client ${client.id} bid with ${data.price}`);
     console.log(data);
+    console.log(`Client ${client.id} bid with ${data.price}`);
     await this.auctionService.bid(client, data); // 파싱된 데이터를 사용하여 서비스 메서드를 호출
   }
 

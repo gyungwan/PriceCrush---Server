@@ -27,10 +27,9 @@ export class ProductsService {
         imgurl.push(key);
       }),
     );
-    console.log(imgurl);
 
     const { productCategory, ...product } = createProductInput;
-    console.log(product);
+
     const result = await this.productRepository.save({
       productCategory: {
         id: productCategory,
@@ -40,7 +39,6 @@ export class ProductsService {
       },
       ...product,
     });
-    console.log(result);
 
     await Promise.all(
       imgurl.map((el, i) =>

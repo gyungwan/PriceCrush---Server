@@ -42,15 +42,14 @@ export class ProductsService {
 
     await Promise.all(
       imgurl.map((el, i) =>
-        this.productImageRepository.create({
+        this.productImageRepository.save({
           url: el,
           is_main: i === 0 ? true : false,
-          product: {
-            id: result.id,
-          },
+          product: { ...result },
         }),
       ),
     );
+
     return result;
   }
   async search(query: string) {
@@ -69,7 +68,7 @@ export class ProductsService {
   async findAll() {
     // const result = await this.productRepository.find({where:{}});
     const result = await this.productRepository.find({
-      relations: ['productCategory'],
+      relations: ['productCategory', 'productImage'],
     });
     return result;
   }
@@ -77,6 +76,7 @@ export class ProductsService {
   async find({ productId }) {
     const result = await this.productRepository.findOne({
       where: { id: productId },
+      relations: ['productCategory', 'productImage'],
     });
     return result;
   }

@@ -54,7 +54,7 @@ export class ProductsController {
   ) {
     const createProductInput = JSON.parse(createproductRequest);
     const userId = req.user.id;
-    console.log(userId);
+
     return await this.productsService.create({
       userId,
       createProductInput,

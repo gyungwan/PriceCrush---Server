@@ -7,12 +7,15 @@ import { LessThan, MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auction } from './entities/auction.entity';
 import { ProductsService } from '../products/products.service';
+import { Product } from '../products/entities/product.entity';
 
 @Injectable()
 export class AuctionService {
   constructor(
     @InjectRepository(Auction)
     private readonly auctionRepository: Repository<Auction>,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
     private readonly productService: ProductsService,
   ) {}
   // private readonly auctions: AuctionInterface[] = [
@@ -77,12 +80,9 @@ export class AuctionService {
 
     // 들어가야 하는 조건
     // 1. product가 존재해야 함.
-
-    console.log('parsedData:', data);
     const product = await this.productService.find({
       productId: data.product,
     });
-
     if (!product) {
       console.log(product);
       return;
@@ -120,7 +120,11 @@ export class AuctionService {
           price: data.price,
           update_dt: new Date(),
         });
+        Object.assign(product, {
+          start_price: data.price,
+        });
         auctionResult = await this.auctionRepository.save(myAuction);
+        await this.productRepository.save(product);
       }
       console.log('client.rooms');
       console.log(client.rooms);

@@ -61,7 +61,7 @@ export class Product {
   @OneToMany(() => ProductImage, (productImage) => productImage.product, {
     cascade: true,
   })
-  productImage: ProductImage[];
+  productImage: ProductImage;
 
   @OneToOne(() => Auction, (auction) => auction.product)
   auction: Auction;

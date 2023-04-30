@@ -61,22 +61,23 @@ export class UsersService {
       password: hashedPassword,
     });
 
-    // const messageService = new coolsms(
-    //   process.env.COOLSMS_API_KEY,
-    //   process.env.COOLSMS_API_SECRET,
-    // );
-    // messageService
-    //   .sendOne({
-    //     to: `${phone}`,
-    //     from: '01086472391',
-    //     text: `[PriceCrush] 임시비밀번호 : ${randomNum}`,
-    //     type: 'SMS',
-    //     autoTypeDetect: false,
-    //   })
-    //   .then((res) => {
-    //     return res;
-    //   })
-    //   .catch((err) => console.error(err));
+    const messageService = new coolsms(
+      process.env.COOLSMS_API_KEY,
+      process.env.COOLSMS_API_SECRET,
+    );
+
+    messageService
+      .sendOne({
+        to: `${phone}`,
+        from: process.env.COOLSMS_PHONE,
+        text: `[PriceCrush] 임시비밀번호 : ${randomNum}`,
+        type: 'SMS',
+        autoTypeDetect: false,
+      })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => console.error(err));
 
     return { status: { code: 200, msg: `${randomNum} 문자발송 완료!` } };
   }

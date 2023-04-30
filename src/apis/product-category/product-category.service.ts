@@ -49,15 +49,15 @@ export class ProductCategoryService {
       },
     });
 
-    const fileKey = category.imgurl;
     try {
       // S3 스토리지에서 파일 삭제
-      await s3.send(
+      const data = await s3.send(
         new DeleteObjectCommand({
           Bucket: this.configService.get('AWS_BUCKET_NAME'),
-          Key: fileKey,
+          Key: category.imgurl,
         }),
       );
+      console.log(data);
       await this.productCategoryRepository.delete({ id: id });
       return { message: '이미지 삭제 성공' };
     } catch (error) {

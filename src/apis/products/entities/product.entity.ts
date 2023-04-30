@@ -43,6 +43,10 @@ export class Product {
   @ApiProperty({ description: '상품 경매 종료 일/시' })
   end_date: Date;
 
+  @Column()
+  @ApiProperty({ description: '최소 입찰 단위' })
+  minBidPrice: string;
+
   @DeleteDateColumn()
   @ApiProperty({ description: '상품 삭제 일/시' })
   deletedAt: Date;

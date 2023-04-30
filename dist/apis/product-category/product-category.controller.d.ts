@@ -10,5 +10,7 @@ export declare class ProductCategoryController {
         id: any;
         name: any;
     } & ProductCategory>;
-    removeCategory(id: string): Promise<import("typeorm").DeleteResult>;
+    removeCategory(id: string): Promise<{
+        message: string;
+    }>;
 }

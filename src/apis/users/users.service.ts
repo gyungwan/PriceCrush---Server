@@ -5,11 +5,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import * as nodemailer from 'nodemailer';
+import coolsms from 'coolsms-node-sdk';
 
 @Injectable()
 export class UsersService {
@@ -63,49 +61,36 @@ export class UsersService {
       password: hashedPassword,
     });
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+    // const messageService = new coolsms(
+    //   process.env.COOLSMS_API_KEY,
+    //   process.env.COOLSMS_API_SECRET,
+    // );
+    // messageService
+    //   .sendOne({
+    //     to: `${phone}`,
+    //     from: '01086472391',
+    //     text: `[PriceCrush] 임시비밀번호 : ${randomNum}`,
+    //     type: 'SMS',
+    //     autoTypeDetect: false,
+    //   })
+    //   .then((res) => {
+    //     return res;
+    //   })
+    //   .catch((err) => console.error(err));
+
+    return { status: { code: 200, msg: `${randomNum} 문자발송 완료!` } };
+  }
+
+  async updatePwd({ password, email }) {
+    console.log(password);
+    console.log(email);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    return await this.userRepository.update(
+      {
+        email,
       },
-    });
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_SENDER,
-      to: email,
-      subject: '[PriceCrush] 임시비밀번호가 발급되었습니다.',
-      html: `
-      <html>
-        <body>
-            <div style ="display: flex; flex-direction: column; justify-content: center; width:600px;">
-                    <h1>안녕하세요 ${user.name}님, PriceCrush입니다.</h1>
-                    <br />
-                    <div>${user.name}님의 임시 비밀번호는 다음과 같습니다.</div>
-                    <div style = "font-weight: bold;">임시비밀번호: ${randomNum} </div>
-                    <br />
-                    <div>개인정보 보호를 위해 로그인 후 새로운 비밀번호로 변경해 주시기 바랍니다.</div>
-                    <div>저희 PriceCrush를 이용해 주셔서 감사합니다.</div>
-                    <br /><br />
-                    <buttton style="
-                    background-color: #81564B;
-                    text-align: center;
-                    padding: 20px;
-                    text-align: center;
-                    cursor: pointer;
-                    font-size:24px;
-                    width: 200px;
-                    padding:20px 60px;
-                    outline: none;
-                    border: none;
-                    border-radius:5px;
-                     ;"><a href="비밀번호 변경 페이지 url" style="color: #FFFFFF; text-decoration: none; ">PriceCrush로 이동</a></button>
-            </div>
-        </body>
-    </html>`,
-    });
-
-    return '메일이 전송되었습니다.';
+      { password: hashedPassword },
+    );
   }
 
   // update(id: number, updateUserDto: UpdateUserDto) {

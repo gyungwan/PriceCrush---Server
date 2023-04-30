@@ -27,10 +27,9 @@ export class ProductsService {
         imgurl.push(key);
       }),
     );
-    console.log(imgurl);
 
     const { productCategory, ...product } = createProductInput;
-    console.log(product);
+
     const result = await this.productRepository.save({
       productCategory: {
         id: productCategory,
@@ -40,7 +39,6 @@ export class ProductsService {
       },
       ...product,
     });
-    console.log(result);
 
     await Promise.all(
       imgurl.map((el, i) =>
@@ -54,6 +52,18 @@ export class ProductsService {
       ),
     );
     return result;
+  }
+  async search(query: string) {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.productCategory', 'productCategory')
+      .where('product.name LIKE :query OR product.desc LIKE :query', {
+        query: `%${query}%`,
+      })
+      .orWhere('productCategory.name LIKE :category', {
+        category: `%${query}%`,
+      })
+      .getMany();
   }
 
   async findAll() {

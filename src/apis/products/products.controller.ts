@@ -10,6 +10,7 @@ import {
   Request,
   UseGuards,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -59,6 +60,20 @@ export class ProductsController {
       createProductInput,
       files,
     });
+  }
+
+  //----------------- 상품검색 -----------------------//
+  @Get('/search/')
+  @ApiOperation({
+    summary: '상품 검색',
+    description: '상품 검색 API',
+  })
+  @ApiResponse({
+    description: '상품 리스트가 리턴됩니다',
+    type: [Product],
+  })
+  async searchProducts(@Query('query') query: string) {
+    return await this.productsService.search(query);
   }
 
   //----------------- 전체상품조회 -----------------------//

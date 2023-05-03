@@ -39,7 +39,9 @@ export class UsersService {
   }
 
   async findId({ name, phone }) {
-    const user = await this.userRepository.findOneBy({ name, phone });
+    const user = await this.userRepository.findOne({
+      where: { name, phone },
+    });
     return user.email;
   }
 
@@ -83,8 +85,6 @@ export class UsersService {
   }
 
   async updatePwd({ password, email }) {
-    console.log(password);
-    console.log(email);
     const hashedPassword = await bcrypt.hash(password, 10);
     return await this.userRepository.update(
       {

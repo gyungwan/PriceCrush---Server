@@ -7,12 +7,11 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FindUserDto } from './dto/find-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserResponseDto } from './dto/create-user.response.dto';
 import { FindUserResponseDto } from './dto/find-user.response.dto';
@@ -47,10 +46,10 @@ export class UsersController {
     description: '회원가입한 회원정보가 리턴됩니다',
     type: FindUserResponseDto,
   })
-  findId(@Body() findUserDto: FindUserDto) {
+  findId(@Query('name') name: string, @Query('phone') phone: string) {
     return this.usersService.findId({
-      name: findUserDto.name,
-      phone: findUserDto.phone,
+      name,
+      phone,
     });
   }
 

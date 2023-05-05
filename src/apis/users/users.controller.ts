@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Put, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -53,7 +43,7 @@ export class UsersController {
     });
   }
 
-  @Put('find/pw')
+  @Post('find/pw')
   @ApiOperation({
     summary: '임시 비밀번호 전송 API',
     description: '임시 비밀번호 전송 API',

@@ -46,17 +46,41 @@ export class UsersService {
   }
 
   async findUserPWd({ name, phone, email }) {
-    const randomNum = String(Math.floor(Math.random() * 1000000)).padStart(
-      6,
-      '0',
+    // 임시 비밀번호 발급
+    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const specialCharacters = '!@#$%^&*(),.?":{}|<>';
+    const numbers = '0123456789';
+
+    // 비밀번호 길이 4 ~ 16으로 지정
+    const passwordLength = Math.floor(Math.random() * 13 + 4);
+    let temPassword = '';
+
+    // passwordLength에서 2를 뺀 갯수만큼 영어로 채워줌
+    while (temPassword.length < passwordLength - 2) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      temPassword += characters.charAt(randomIndex);
+    }
+
+    // 렌덤한 특수문자 한 개 가져오기
+    const randomSpecialChar = specialCharacters.charAt(
+      Math.floor(Math.random() * specialCharacters.length),
     );
+    // 랜덤한 숫자 한 개 가져오기
+    const randomNumber = numbers.charAt(
+      Math.floor(Math.random() * numbers.length),
+    );
+    // 가져온 랜덤한 특수문자를 임시비밀번호에 추가
+    temPassword += randomSpecialChar;
+    // 가져온 랜덤한 숫자를 임시비밀번호에 추가
+    temPassword += randomNumber;
+
     const user = await this.userRepository.findOne({
       where: { name, phone, email },
     });
     if (!user) {
       throw new UnprocessableEntityException('가입되지 않은 회원입니다.');
     }
-    const hashedPassword = await bcrypt.hash(randomNum, 10);
+    const hashedPassword = await bcrypt.hash(temPassword, 10);
 
     await this.userRepository.save({
       ...user,
@@ -72,7 +96,7 @@ export class UsersService {
       .sendOne({
         to: `${phone}`,
         from: process.env.COOLSMS_PHONE,
-        text: `[PriceCrush] 임시비밀번호 : ${randomNum}`,
+        text: `[PriceCrush] 임시비밀번호 : ${temPassword}`,
         type: 'SMS',
         autoTypeDetect: false,
       })
@@ -81,7 +105,7 @@ export class UsersService {
       })
       .catch((err) => console.error(err));
 
-    return { status: { code: 200, msg: `${randomNum} 문자발송 완료!` } };
+    return { status: { code: 200, msg: `${temPassword} 문자발송 완료!` } };
   }
 
   async updatePwd({ password, email }) {

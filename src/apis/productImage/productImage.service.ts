@@ -15,7 +15,7 @@ export class ProductImageService {
       where: {
         product: { id: productID },
       },
-      relations: ['Product'],
+      relations: ['product'],
     });
   }
 }

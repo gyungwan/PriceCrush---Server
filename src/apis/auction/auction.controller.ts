@@ -7,7 +7,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuctionService } from './auction.service';
 import { CreateAuctionDto } from './dto/create-auction.dto';
 import { UpdateAuctionDto } from './dto/update-auction.dto';
@@ -31,5 +31,19 @@ export class AuctionController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return '';
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: '경매 종료', description: '경매 종료 API' })
+  @ApiResponse({ type: Object })
+  async auctionEnd(@Param('auctionID') auctionId: string) {
+    return await this.auctionService.auctionEnd(auctionId);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: '경매 삭제', description: '경매 삭제 API' })
+  @ApiResponse({ type: Boolean })
+  async auctionDelete(@Param('auctionID') auctionId: string) {
+    return await this.auctionService.auctionDelete(auctionId);
   }
 }

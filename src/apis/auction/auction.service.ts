@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuctionDto } from './dto/create-auction.dto';
 import { UpdateAuctionDto } from './dto/update-auction.dto';
 import { AuctionInterface } from './interfaces/auction.interface';
@@ -145,7 +145,49 @@ export class AuctionService {
       });
     }
   }
+  async auctionEnd(auctionId: string): Promise<Auction> {
+    //경매생성한 유저가맞는지 검증후 종료
+    const auction = await this.auctionRepository.findOne({
+      where: { id: auctionId },
+      relations: ['product'],
+    });
+    console.log(auction);
+    if (!auction) {
+      throw new NotFoundException(`해당하는 경매를 찾을 수 없습니다.`);
+    }
+    // 이미 경매가 종료되었으면 중복 종료하지 않도록 예외 처리
+    const now = new Date();
+    if (auction.product.end_date && auction.product.end_date <= now) {
+      throw new Error(`해당 경매가 종료되었습니다.`);
+    }
 
+    // 경매 종료 시간을 현재 시간으로 설정
+    auction.product.end_date = new Date();
+    await this.productRepository.save(auction.product);
+
+    // 경매가 종료되었음을 참여한 유저들에게 알림
+    //this.notifyAuctionEnd(auction.product.id);
+
+    return auction;
+  }
+  async auctionDelete(auctionId: string) {
+    const auction = await this.auctionRepository.findOne({
+      where: { id: auctionId },
+      relations: ['product', 'product.user'],
+    });
+    // // 경매를 삭제합니다.
+    // await this.auctionRepository.delete(auctionId);
+
+    const productId = auction.product.id;
+    const userId = auction.product.user.id;
+
+    // // 연결된 상품을 삭제합니다.
+    // await this.productRepository.delete({ auction: { id: auctionId } });
+    await this.auctionRepository.delete(auctionId);
+    await this.auctionRepository.manager.delete('Product', productId);
+    await this.auctionRepository.manager.delete('User', userId);
+    return auction ? true : false;
+  }
   async test(client: Socket, data) {
     console.log(data);
     client.emit('test', { message: 'test' });

@@ -7,10 +7,15 @@ import { ProductImage } from '../productImage/entities/productImage.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { multerOptionsFactory } from 'src/common/utils/multer.options';
+import { ScheduleModule } from '@nestjs/schedule';
+import { AuctionService } from '../auction/auction.service';
+import { Auction } from '../auction/entities/auction.entity';
+import { Repository } from 'typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Product, ProductImage]),
+    ScheduleModule.forRoot(),
+    TypeOrmModule.forFeature([Auction, Product, ProductImage]),
     MulterModule.registerAsync({
       imports: [ConfigModule],
       useFactory: multerOptionsFactory,
@@ -18,6 +23,6 @@ import { multerOptionsFactory } from 'src/common/utils/multer.options';
     }),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, AuctionService, Repository],
 })
 export class ProductsModule {}

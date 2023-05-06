@@ -101,7 +101,25 @@ export class ProductsController {
   async getProduct(@Param('id') id: string) {
     return await this.productsService.find({ productId: id });
   }
-
+  //-----------------카테고리별 상품조회 -----------------------//
+  @Get('/category/:categoryId')
+  @ApiOperation({
+    summary: '카테고리별 상품 조회',
+    description: '특정 카테고리의 상품을 조회합니다.',
+  })
+  @ApiResponse({ type: [Product] })
+  async fetchProductsByCategory(
+    @Param('categoryId') categoryId: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    const products = await this.productsService.fetchProductsByCategory(
+      categoryId,
+      (page = 1), //여기서 1페이지에 상품 몇개씩 넘길건지 정하는
+      (limit = 12),
+    );
+    return products;
+  }
   //----------------- 상품 업데이트 -----------------------//
   // 상품 start_date 이후로 업데이트 못하게 하는 로직
 

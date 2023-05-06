@@ -25,11 +25,16 @@ import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
 import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { CronJob } from 'cron';
 
 @Controller('product')
 @ApiTags('상품 API')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly schedulerRegistry: SchedulerRegistry,
+  ) {}
 
   //----------------- 생성 -----------------------//
   @UseGuards(RestAuthAccessGuard)
@@ -54,12 +59,33 @@ export class ProductsController {
   ) {
     const createProductInput = JSON.parse(createproductRequest);
     const userId = req.user.id;
-
-    return await this.productsService.create({
+    const product = await this.productsService.create({
       userId,
       createProductInput,
       files,
     });
+
+    // cron에 세팅할 end_date time formatting
+    console.log(product.end_date);
+    const endDate = new Date(product.end_date);
+    // 서버시간에 맞추기
+    const notiDate = new Date(endDate.getTime() - 1000 * 60 * 60 * 9);
+    console.log(new Date());
+    const endMonth = notiDate.getMonth();
+    const endDay = notiDate.getDate();
+    const endHour = notiDate.getHours();
+    const endMinute = notiDate.getMinutes();
+    const endSecond = notiDate.getSeconds();
+    const endTime = `${endSecond} ${endMinute} ${endHour} ${endDay} ${endMonth} *`;
+    console.log(endTime);
+
+    const job = new CronJob(endTime, () => {
+      console.log('end_date가 되어 경매를 종료합니다.');
+      this.productsService.notification({ productId: product.id });
+    });
+    this.schedulerRegistry.addCronJob(product.id, job);
+    job.start();
+    return product;
   }
 
   //----------------- 상품검색 -----------------------//

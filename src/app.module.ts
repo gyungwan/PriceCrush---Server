@@ -12,6 +12,7 @@ import { ProductImageModule } from './apis/productImage/productImage.module';
 import { AuctionModule } from './apis/auction/auction.module';
 import { jwtAccessStrategy } from './common/auth/jwt-access.strategy';
 import { jwtRefreshStrategy } from './common/auth/jwt-refresh.strategy';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { jwtRefreshStrategy } from './common/auth/jwt-refresh.strategy';
       synchronize: true,
       logging: true,
     }),
+    ScheduleModule.forRoot(),
     ProductImageModule,
     ProductsModule,
     AuthModule,

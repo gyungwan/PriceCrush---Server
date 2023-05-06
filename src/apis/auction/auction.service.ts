@@ -47,7 +47,9 @@ export class AuctionService {
       where: {
         user: { email },
         product: {
-          end_date: MoreThan(new Date()),
+          end_date: MoreThan(
+            new Date(new Date().getTime() + 1000 * 60 * 60 * 9),
+          ),
         },
       },
     });

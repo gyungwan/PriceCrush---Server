@@ -97,6 +97,27 @@ export class ProductsService {
     return result;
   }
 
+  async fetchProductsByCategory(
+    categoryId: string,
+    page: number,
+    limit: number,
+  ) {
+    const skip = (page - 1) * limit;
+    const take = limit;
+
+    const [products, totalCount] = await this.productRepository.findAndCount({
+      where: { productCategory: { id: categoryId } },
+      skip,
+      take,
+    });
+
+    return {
+      products,
+      totalCount, //총 상품 수
+      totalPages: Math.ceil(totalCount / limit), //페이지 수
+    };
+  }
+
   async update({ productId, updateProductInput }) {
     // 상품의 업데이트는 상태값이 0인것만 업데이트 가능하다.(0 === 판매 대기중인 상태)
     const oldProduct = await this.productRepository.findOne({

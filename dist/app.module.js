@@ -21,6 +21,7 @@ const productImage_module_1 = require("./apis/productImage/productImage.module")
 const auction_module_1 = require("./apis/auction/auction.module");
 const jwt_access_strategy_1 = require("./common/auth/jwt-access.strategy");
 const jwt_refresh_strategy_1 = require("./common/auth/jwt-refresh.strategy");
+const schedule_1 = require("@nestjs/schedule");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -39,6 +40,7 @@ AppModule = __decorate([
                 synchronize: true,
                 logging: true,
             }),
+            schedule_1.ScheduleModule.forRoot(),
             productImage_module_1.ProductImageModule,
             products_module_1.ProductsModule,
             auth_module_1.AuthModule,

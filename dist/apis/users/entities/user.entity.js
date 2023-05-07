@@ -10,47 +10,58 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const typeorm_1 = require("typeorm");
 let User = class User {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, swagger_1.ApiProperty)({ description: '유저 고유 아이디' }),
     __metadata("design:type", String)
 ], User.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '유저 이메일' }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '유저 비밀번호' }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '유저 전화번호' }),
     __metadata("design:type", String)
 ], User.prototype, "phone", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '유저 닉네임' }),
     __metadata("design:type", String)
 ], User.prototype, "nickname", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '유저 주소' }),
     __metadata("design:type", String)
 ], User.prototype, "address", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '유저 이름' }),
     __metadata("design:type", String)
 ], User.prototype, "name", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '서비스 이용 약관 동의 여부' }),
     __metadata("design:type", Boolean)
 ], User.prototype, "agreement_use", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '마케팅 수신 동의 여부' }),
     __metadata("design:type", Boolean)
 ], User.prototype, "agreement_mkt", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '유저 관심사' }),
     __metadata("design:type", String)
 ], User.prototype, "favorites", void 0);
 User = __decorate([

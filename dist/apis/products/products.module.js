@@ -16,12 +16,17 @@ const productImage_entity_1 = require("../productImage/entities/productImage.ent
 const platform_express_1 = require("@nestjs/platform-express");
 const config_1 = require("@nestjs/config");
 const multer_options_1 = require("../../common/utils/multer.options");
+const schedule_1 = require("@nestjs/schedule");
+const auction_service_1 = require("../auction/auction.service");
+const auction_entity_1 = require("../auction/entities/auction.entity");
+const typeorm_2 = require("typeorm");
 let ProductsModule = class ProductsModule {
 };
 ProductsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([product_entity_1.Product, productImage_entity_1.ProductImage]),
+            schedule_1.ScheduleModule.forRoot(),
+            typeorm_1.TypeOrmModule.forFeature([auction_entity_1.Auction, product_entity_1.Product, productImage_entity_1.ProductImage]),
             platform_express_1.MulterModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 useFactory: multer_options_1.multerOptionsFactory,
@@ -29,7 +34,7 @@ ProductsModule = __decorate([
             }),
         ],
         controllers: [products_controller_1.ProductsController],
-        providers: [products_service_1.ProductsService],
+        providers: [products_service_1.ProductsService, auction_service_1.AuctionService, typeorm_2.Repository],
     })
 ], ProductsModule);
 exports.ProductsModule = ProductsModule;

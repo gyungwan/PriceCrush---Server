@@ -1,7 +1,7 @@
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FindUserDto } from './dto/find-user.dto';
 import { FindUserPwdDto } from './dto/find-userPwd.dto';
+import { UpdatePwdDto } from './dto/update-userPwd.dto';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
@@ -11,6 +11,12 @@ export declare class UsersController {
             message: string;
         };
     }>;
-    findId(findUserDto: FindUserDto): Promise<string>;
-    findPwd(findUserPwdDto: FindUserPwdDto): Promise<string>;
+    findId(name: string, phone: string): Promise<string>;
+    findPwd(findUserPwdDto: FindUserPwdDto): Promise<{
+        status: {
+            code: number;
+            msg: string;
+        };
+    }>;
+    updatePwd(updatePwdDto: UpdatePwdDto): Promise<import("typeorm").UpdateResult>;
 }

@@ -26,16 +26,21 @@ let ProductImageController = class ProductImageController {
 };
 __decorate([
     (0, common_1.Get)(),
-    (0, swagger_1.ApiOperation)({}),
-    (0, swagger_1.ApiResponse)({}),
-    __param(0, (0, common_1.Param)()),
+    (0, swagger_1.ApiOperation)({
+        summary: '상품 상세 조회',
+        description: '상품 상세 조회 API',
+    }),
+    (0, swagger_1.ApiResponse)({
+        description: 'productImage 와 product 정보 리턴',
+    }),
+    __param(0, (0, common_1.Query)('productId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductImageController.prototype, "find", null);
 ProductImageController = __decorate([
     (0, common_1.Controller)('productImage'),
-    (0, swagger_1.ApiTags)('상품 이미지 API'),
+    (0, swagger_1.ApiTags)('상품 상세 조회 API'),
     __metadata("design:paramtypes", [productImage_service_1.ProductImageService])
 ], ProductImageController);
 exports.ProductImageController = ProductImageController;

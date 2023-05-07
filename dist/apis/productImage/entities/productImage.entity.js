@@ -10,20 +10,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductImage = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const product_entity_1 = require("../../products/entities/product.entity");
 const typeorm_1 = require("typeorm");
 let ProductImage = class ProductImage {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, swagger_1.ApiProperty)({ description: '상품이미지 고유 아이디' }),
     __metadata("design:type", String)
 ], ProductImage.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '상품 이미지 주소' }),
     __metadata("design:type", String)
 ], ProductImage.prototype, "url", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '상품 메인 이미지 여부' }),
     __metadata("design:type", Boolean)
 ], ProductImage.prototype, "is_main", void 0);
 __decorate([

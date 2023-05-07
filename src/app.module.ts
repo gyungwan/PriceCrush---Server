@@ -13,6 +13,7 @@ import { AuctionModule } from './apis/auction/auction.module';
 import { jwtAccessStrategy } from './common/auth/jwt-access.strategy';
 import { jwtRefreshStrategy } from './common/auth/jwt-refresh.strategy';
 import { ScheduleModule } from '@nestjs/schedule';
+import { MiddlewareModule } from './middleware/middlware.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     UsersModule,
     ProductCategoryModule,
     AuctionModule,
+    MiddlewareModule,
   ],
   controllers: [AppController],
   providers: [AppService, jwtAccessStrategy, jwtRefreshStrategy],

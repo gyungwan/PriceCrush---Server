@@ -40,11 +40,11 @@ const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const bcrypt = __importStar(require("bcrypt"));
 const create_user_dto_1 = require("./dto/create-user.dto");
-const find_user_dto_1 = require("./dto/find-user.dto");
 const swagger_1 = require("@nestjs/swagger");
 const create_user_response_dto_1 = require("./dto/create-user.response.dto");
 const find_user_response_dto_1 = require("./dto/find-user.response.dto");
 const find_userPwd_dto_1 = require("./dto/find-userPwd.dto");
+const update_userPwd_dto_1 = require("./dto/update-userPwd.dto");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
@@ -54,10 +54,10 @@ let UsersController = class UsersController {
         createUserDto.password = hashedPassword;
         return this.usersService.create(createUserDto);
     }
-    findId(findUserDto) {
+    findId(name, phone) {
         return this.usersService.findId({
-            name: findUserDto.name,
-            phone: findUserDto.phone,
+            name,
+            phone,
         });
     }
     findPwd(findUserPwdDto) {
@@ -65,6 +65,12 @@ let UsersController = class UsersController {
             name: findUserPwdDto.name,
             phone: findUserPwdDto.phone,
             email: findUserPwdDto.email,
+        });
+    }
+    updatePwd(updatePwdDto) {
+        return this.usersService.updatePwd({
+            password: updatePwdDto.password,
+            email: updatePwdDto.email,
         });
     }
 };
@@ -93,19 +99,20 @@ __decorate([
         description: '회원가입한 회원정보가 리턴됩니다',
         type: find_user_response_dto_1.FindUserResponseDto,
     }),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Query)('name')),
+    __param(1, (0, common_1.Query)('phone')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [find_user_dto_1.FindUserDto]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "findId", null);
 __decorate([
-    (0, common_1.Put)('find/pw'),
+    (0, common_1.Post)('find/pw'),
     (0, swagger_1.ApiOperation)({
-        summary: '유저 패스워드 변경',
-        description: '유저 비밀번호 변경 API',
+        summary: '임시 비밀번호 전송 API',
+        description: '임시 비밀번호 전송 API',
     }),
     (0, swagger_1.ApiResponse)({
-        description: '이메일이 전송되었습니다.',
+        description: '문자가 전송되었습니다.',
         type: String,
     }),
     __param(0, (0, common_1.Body)()),
@@ -113,6 +120,21 @@ __decorate([
     __metadata("design:paramtypes", [find_userPwd_dto_1.FindUserPwdDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "findPwd", null);
+__decorate([
+    (0, common_1.Patch)('find/pw'),
+    (0, swagger_1.ApiOperation)({
+        summary: '유저 패스워드 변경',
+        description: '유저 비밀번호 변경 API',
+    }),
+    (0, swagger_1.ApiResponse)({
+        description: '비밀번호가 변경되었습니다',
+        type: String,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_userPwd_dto_1.UpdatePwdDto]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "updatePwd", null);
 UsersController = __decorate([
     (0, common_1.Controller)('users'),
     (0, swagger_1.ApiTags)('유저 API'),

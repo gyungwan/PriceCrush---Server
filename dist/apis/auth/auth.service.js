@@ -36,6 +36,7 @@ let AuthService = class AuthService {
         return;
     }
     getAccesstoken({ user }) {
+        const token = this.jwtService.sign({ email: user.email }, { secret: 'myAccessKey', expiresIn: '1h' });
         return this.jwtService.sign({
             id: user.id,
             email: user.email,
@@ -47,6 +48,18 @@ let AuthService = class AuthService {
         const messageService = new coolsms_node_sdk_1.default(process.env.COOLSMS_API_KEY, process.env.COOLSMS_API_SECRET);
         const randomNum = String(Math.random() * 100000000).substr(1, 6);
         await this.authRepository.save({ phone: phone, code: randomNum });
+        messageService
+            .sendOne({
+            to: `${phone}`,
+            from: '01086472391',
+            text: `[PriceCrush] 인증번호 : ${randomNum}`,
+            type: 'SMS',
+            autoTypeDetect: false,
+        })
+            .then((res) => {
+            return res;
+        })
+            .catch((err) => console.error(err));
         return { status: { code: 200, msg: `${randomNum} 문자발송 완료!` } };
     }
     async certification(certificationCodeDto) {

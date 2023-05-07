@@ -32,6 +32,64 @@ export class AuctionService {
       order: { price: 'DESC' },
     });
   }
+
+  async findMySellingAuctionList({ userId }) {
+    const myAuctions = await this.auctionRepository.find({
+      where: {
+        product: {
+          user: { id: userId },
+          end_date: MoreThan(
+            new Date(new Date().getTime() + 1000 * 60 * 60 * 9),
+          ),
+        },
+      },
+    });
+
+    return myAuctions;
+  }
+
+  async findMySoldAuctionList({ userId }) {
+    const myAuctions = await this.auctionRepository.find({
+      where: {
+        product: {
+          user: { id: userId },
+          end_date: LessThan(
+            new Date(new Date().getTime() + 1000 * 60 * 60 * 9),
+          ),
+        },
+      },
+    });
+    return myAuctions;
+  }
+
+  async findBiddingList({ userId }) {
+    const myAuctions = await this.auctionRepository.find({
+      where: {
+        user: { id: userId },
+        product: {
+          end_date: LessThan(
+            new Date(new Date().getTime() + 1000 * 60 * 60 * 9),
+          ),
+        },
+      },
+    });
+    return myAuctions;
+  }
+
+  async findEndedBidList({ userId }) {
+    const myAuctions = await this.auctionRepository.find({
+      where: {
+        user: { id: userId },
+        product: {
+          end_date: LessThan(
+            new Date(new Date().getTime() + 1000 * 60 * 60 * 9),
+          ),
+        },
+      },
+    });
+    return myAuctions;
+  }
+
   async findMyAuction({ productId, userId }) {
     const auction = await this.auctionRepository.findOne({
       where: {

@@ -12,6 +12,6 @@ export declare class Product {
     deletedAt: Date;
     productCategory: ProductCategory;
     user: User;
-    productImage: ProductImage[];
+    productImage: ProductImage;
     auction: Auction;
 }

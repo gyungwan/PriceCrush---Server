@@ -20,5 +20,14 @@ export declare class UsersService {
         name: any;
         phone: any;
         email: any;
-    }): Promise<string>;
+    }): Promise<{
+        status: {
+            code: number;
+            msg: string;
+        };
+    }>;
+    updatePwd({ password, email }: {
+        password: any;
+        email: any;
+    }): Promise<import("typeorm").UpdateResult>;
 }

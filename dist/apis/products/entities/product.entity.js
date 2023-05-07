@@ -68,7 +68,7 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => productImage_entity_1.ProductImage, (productImage) => productImage.product, {
         cascade: true,
     }),
-    __metadata("design:type", Array)
+    __metadata("design:type", productImage_entity_1.ProductImage)
 ], Product.prototype, "productImage", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => auction_entity_1.Auction, (auction) => auction.product),

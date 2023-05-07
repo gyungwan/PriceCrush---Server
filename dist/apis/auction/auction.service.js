@@ -18,9 +18,11 @@ const typeorm_1 = require("typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
 const auction_entity_1 = require("./entities/auction.entity");
 const products_service_1 = require("../products/products.service");
+const product_entity_1 = require("../products/entities/product.entity");
 let AuctionService = class AuctionService {
-    constructor(auctionRepository, productService) {
+    constructor(auctionRepository, productRepository, productService) {
         this.auctionRepository = auctionRepository;
+        this.productRepository = productRepository;
         this.productService = productService;
     }
     create(createAuctionDto) {
@@ -31,6 +33,50 @@ let AuctionService = class AuctionService {
             where: { product: { id: productId } },
             order: { price: 'DESC' },
         });
+    }
+    async findMySellingAuctionList({ userId }) {
+        const myAuctions = await this.auctionRepository.find({
+            where: {
+                product: {
+                    user: { id: userId },
+                    end_date: (0, typeorm_1.MoreThan)(new Date(new Date().getTime() + 1000 * 60 * 60 * 9)),
+                },
+            },
+        });
+        return myAuctions;
+    }
+    async findMySoldAuctionList({ userId }) {
+        const myAuctions = await this.auctionRepository.find({
+            where: {
+                product: {
+                    user: { id: userId },
+                    end_date: (0, typeorm_1.LessThan)(new Date(new Date().getTime() + 1000 * 60 * 60 * 9)),
+                },
+            },
+        });
+        return myAuctions;
+    }
+    async findBiddingList({ userId }) {
+        const myAuctions = await this.auctionRepository.find({
+            where: {
+                user: { id: userId },
+                product: {
+                    end_date: (0, typeorm_1.LessThan)(new Date(new Date().getTime() + 1000 * 60 * 60 * 9)),
+                },
+            },
+        });
+        return myAuctions;
+    }
+    async findEndedBidList({ userId }) {
+        const myAuctions = await this.auctionRepository.find({
+            where: {
+                user: { id: userId },
+                product: {
+                    end_date: (0, typeorm_1.LessThan)(new Date(new Date().getTime() + 1000 * 60 * 60 * 9)),
+                },
+            },
+        });
+        return myAuctions;
     }
     async findMyAuction({ productId, userId }) {
         const auction = await this.auctionRepository.findOne({
@@ -45,6 +91,9 @@ let AuctionService = class AuctionService {
         const auctions = await this.auctionRepository.find({
             where: {
                 user: { email },
+                product: {
+                    end_date: (0, typeorm_1.MoreThan)(new Date(new Date().getTime() + 1000 * 60 * 60 * 9)),
+                },
             },
         });
         console.log(auctions);
@@ -58,7 +107,9 @@ let AuctionService = class AuctionService {
         return await this.auctionRepository.find({ where: { product: productId } });
     }
     async bid(client, data) {
-        const product = await this.productService.find({ productId: data.product });
+        const product = await this.productService.find({
+            productId: data.product,
+        });
         if (!product) {
             console.log(product);
             return;
@@ -86,8 +137,15 @@ let AuctionService = class AuctionService {
                 await client.join(`auction-${product.id}`);
             }
             else {
-                Object.assign(myAuction, { price: data.price, update_dt: new Date() });
+                Object.assign(myAuction, {
+                    price: data.price,
+                    update_dt: new Date(),
+                });
+                Object.assign(product, {
+                    start_price: data.price,
+                });
                 auctionResult = await this.auctionRepository.save(myAuction);
+                await this.productRepository.save(product);
             }
             console.log('client.rooms');
             console.log(client.rooms);
@@ -106,11 +164,46 @@ let AuctionService = class AuctionService {
             });
         }
     }
+    async auctionEnd(auctionId) {
+        const auction = await this.auctionRepository.findOne({
+            where: { id: auctionId },
+            relations: ['product'],
+        });
+        console.log(auction);
+        if (!auction) {
+            throw new common_1.NotFoundException(`해당하는 경매를 찾을 수 없습니다.`);
+        }
+        const now = new Date();
+        if (auction.product.end_date && auction.product.end_date <= now) {
+            throw new Error(`해당 경매가 종료되었습니다.`);
+        }
+        auction.product.end_date = new Date();
+        await this.productRepository.save(auction.product);
+        return auction;
+    }
+    async auctionDelete(auctionId) {
+        const auction = await this.auctionRepository.findOne({
+            where: { id: auctionId },
+            relations: ['product', 'product.user'],
+        });
+        const productId = auction.product.id;
+        const userId = auction.product.user.id;
+        await this.auctionRepository.delete(auctionId);
+        await this.auctionRepository.manager.delete('Product', productId);
+        await this.auctionRepository.manager.delete('User', userId);
+        return auction ? true : false;
+    }
+    async test(client, data) {
+        console.log(data);
+        client.emit('test', { message: 'test' });
+    }
 };
 AuctionService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_2.InjectRepository)(auction_entity_1.Auction)),
+    __param(1, (0, typeorm_2.InjectRepository)(product_entity_1.Product)),
     __metadata("design:paramtypes", [typeorm_1.Repository,
+        typeorm_1.Repository,
         products_service_1.ProductsService])
 ], AuctionService);
 exports.AuctionService = AuctionService;

@@ -22,6 +22,7 @@ import { Repository } from 'typeorm';
       inject: [ConfigService],
     }),
   ],
+  exports: [ProductsService],
   controllers: [ProductsController],
   providers: [ProductsService, AuctionService, Repository],
 })

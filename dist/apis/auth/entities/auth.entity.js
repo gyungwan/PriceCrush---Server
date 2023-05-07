@@ -10,23 +10,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Auth = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const typeorm_1 = require("typeorm");
 let Auth = class Auth {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, swagger_1.ApiProperty)({ description: '인증 고유 아이디' }),
     __metadata("design:type", String)
 ], Auth.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '인증 핸드폰 번호' }),
     __metadata("design:type", String)
 ], Auth.prototype, "phone", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, swagger_1.ApiProperty)({ description: '인증 코드' }),
     __metadata("design:type", String)
 ], Auth.prototype, "code", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
+    (0, swagger_1.ApiProperty)({ description: '인증 생성 일짜' }),
     __metadata("design:type", Date)
 ], Auth.prototype, "created_at", void 0);
 Auth = __decorate([

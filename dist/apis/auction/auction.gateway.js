@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuctionGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
@@ -33,9 +36,14 @@ let AuctionGateway = class AuctionGateway {
         console.log(`Client disconnected: ${client.id}`);
     }
     async handleBid(client, data) {
-        console.log(`Client ${client.id} bid with ${data[0].price}`);
-        console.log(data[0]);
-        await this.auctionService.bid(client, data[0]);
+        console.log(data);
+        console.log(`Client ${client.id} bid with ${data.price}`);
+        await this.auctionService.bid(client, data);
+    }
+    async handleTest(client, data) {
+        console.log('data: ', data);
+        await this.auctionService.test(client, data);
+        return data;
     }
 };
 __decorate([
@@ -44,10 +52,20 @@ __decorate([
 ], AuctionGateway.prototype, "server", void 0);
 __decorate([
     (0, websockets_1.SubscribeMessage)('bid'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
 ], AuctionGateway.prototype, "handleBid", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('test'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], AuctionGateway.prototype, "handleTest", null);
 AuctionGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {

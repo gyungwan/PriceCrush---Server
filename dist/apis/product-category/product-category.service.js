@@ -51,12 +51,12 @@ let ProductCategoryService = class ProductCategoryService {
                 secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY'),
             },
         });
-        const fileKey = `${category.imgurl}`;
         try {
-            await s3.send(new client_s3_1.DeleteObjectCommand({
+            const data = await s3.send(new client_s3_1.DeleteObjectCommand({
                 Bucket: this.configService.get('AWS_BUCKET_NAME'),
-                Key: fileKey,
+                Key: category.imgurl,
             }));
+            console.log(data);
             await this.productCategoryRepository.delete({ id: id });
             return { message: '이미지 삭제 성공' };
         }

@@ -34,6 +34,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
@@ -41,7 +44,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const user_entity_1 = require("./entities/user.entity");
 const bcrypt = __importStar(require("bcrypt"));
-const nodemailer = __importStar(require("nodemailer"));
+const coolsms_node_sdk_1 = __importDefault(require("coolsms-node-sdk"));
 let UsersService = class UsersService {
     constructor(userRepository) {
         this.userRepository = userRepository;
@@ -65,60 +68,53 @@ let UsersService = class UsersService {
         return await this.userRepository.findOneBy({ email });
     }
     async findId({ name, phone }) {
-        const user = await this.userRepository.findOneBy({ name, phone });
+        const user = await this.userRepository.findOne({
+            where: { name, phone },
+        });
         return user.email;
     }
     async findUserPWd({ name, phone, email }) {
-        const randomNum = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const specialCharacters = '!@#$%^&*(),.?":{}|<>';
+        const numbers = '0123456789';
+        const passwordLength = Math.floor(Math.random() * 13 + 4);
+        let temPassword = '';
+        while (temPassword.length < passwordLength - 2) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            temPassword += characters.charAt(randomIndex);
+        }
+        const randomSpecialChar = specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length));
+        const randomNumber = numbers.charAt(Math.floor(Math.random() * numbers.length));
+        temPassword += randomSpecialChar;
+        temPassword += randomNumber;
         const user = await this.userRepository.findOne({
             where: { name, phone, email },
         });
         if (!user) {
             throw new common_1.UnprocessableEntityException('가입되지 않은 회원입니다.');
         }
-        const hashedPassword = await bcrypt.hash(randomNum, 10);
+        const hashedPassword = await bcrypt.hash(temPassword, 10);
         await this.userRepository.save(Object.assign(Object.assign({}, user), { password: hashedPassword }));
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-        });
-        await transporter.sendMail({
-            from: process.env.EMAIL_SENDER,
-            to: email,
-            subject: '[PriceCrush] 임시비밀번호가 발급되었습니다.',
-            html: `
-      <html>
-        <body>
-            <div style ="display: flex; flex-direction: column; justify-content: center; width:600px;">
-                    <h1>안녕하세요 ${user.name}님, PriceCrush입니다.</h1>
-                    <br />
-                    <div>${user.name}님의 임시 비밀번호는 다음과 같습니다.</div>
-                    <div style = "font-weight: bold;">임시비밀번호: ${randomNum} </div>
-                    <br />
-                    <div>개인정보 보호를 위해 로그인 후 새로운 비밀번호로 변경해 주시기 바랍니다.</div>
-                    <div>저희 PriceCrush를 이용해 주셔서 감사합니다.</div>
-                    <br /><br />
-                    <buttton style="
-                    background-color: #81564B;
-                    text-align: center;
-                    padding: 20px;
-                    text-align: center;
-                    cursor: pointer;
-                    font-size:24px;
-                    width: 200px;
-                    padding:20px 60px;
-                    outline: none;
-                    border: none;
-                    border-radius:5px;
-                     ;"><a href="비밀번호 변경 페이지 url" style="color: #FFFFFF; text-decoration: none; ">PriceCrush로 이동</a></button>
-            </div>
-        </body>
-    </html>`,
-        });
-        return '메일이 전송되었습니다.';
+        const messageService = new coolsms_node_sdk_1.default(process.env.COOLSMS_API_KEY, process.env.COOLSMS_API_SECRET);
+        messageService
+            .sendOne({
+            to: `${phone}`,
+            from: process.env.COOLSMS_PHONE,
+            text: `[PriceCrush] 임시비밀번호 : ${temPassword}`,
+            type: 'SMS',
+            autoTypeDetect: false,
+        })
+            .then((res) => {
+            return res;
+        })
+            .catch((err) => console.error(err));
+        return { status: { code: 200, msg: `${temPassword} 문자발송 완료!` } };
+    }
+    async updatePwd({ password, email }) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        return await this.userRepository.update({
+            email,
+        }, { password: hashedPassword });
     }
 };
 UsersService = __decorate([

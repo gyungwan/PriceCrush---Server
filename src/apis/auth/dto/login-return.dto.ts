@@ -7,6 +7,7 @@ export class LoginReturnDto {
     description: '유저 정보(email, phone, nickname, address, name)',
   })
   user: {
+    id: string;
     email: string;
     phone: string;
     nickname: string;

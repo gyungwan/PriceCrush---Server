@@ -188,13 +188,16 @@ export class AuctionService {
       }
       console.log('client.rooms');
       console.log(client.rooms);
-      client
-        // .to(`auction-${product.id}`)
-        .emit('bidResult', {
-          success: true,
-          message: `Bid successfully with ${data.price} for ${product.name}`,
-          auctionResult,
-        });
+      client.broadcast.emit('bidResult', {
+        success: true,
+        message: `Bid successfully with ${data.price} for ${product.name}`,
+        auctionResult,
+      });
+      client.emit('bidResult', {
+        success: true,
+        message: `Bid successfully with ${data.price} for ${product.name}`,
+        auctionResult,
+      });
       // 새로운 입찰이 진행되었을 때, productId room에 있는 모든 socket에게 broadcast
       // 새로운 입찰이 진행되었을 때, auctoinId room에 있는 입찰자에게만 broadcast
     } else {

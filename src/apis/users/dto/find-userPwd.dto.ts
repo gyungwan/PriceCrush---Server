@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class FindUserPwdDto {
-  @ApiProperty({ description: '휴대폰' })
+  @ApiProperty({ description: '휴대폰 번호' })
   phone: string;
 
   @ApiProperty({ description: '이름' })

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -40,4 +40,9 @@ import { ScheduleModule } from '@nestjs/schedule';
   controllers: [AppController],
   providers: [AppService, jwtAccessStrategy, jwtRefreshStrategy],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly appService: AppService) {}
+  async onModuleInit() {
+    await this.appService.reset();
+  }
+}

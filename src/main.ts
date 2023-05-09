@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
+
 // async function registerCronJobs(
 //   scheduleRegistry?: SchedulerRegistry,
 //   productsService?: ProductsService,
@@ -38,6 +39,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
 
   console.log('hi');
   await app.listen(3000);

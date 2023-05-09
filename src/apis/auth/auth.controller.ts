@@ -100,7 +100,7 @@ export class AuthController {
     return this.authService.sendsms(phone);
   }
 
-  @Post('certification')
+  @Post('sms/certification')
   @ApiOperation({
     summary: '인증번호 검증',
     description: '유저 인증번호검증 API',
@@ -112,4 +112,32 @@ export class AuthController {
   certification(@Body() body: CertificationCodeDto) {
     return this.authService.certification(body);
   }
+
+
+  // @Post('password')
+  // @ApiOperation({
+  //   summary: '비밀번호 변경 이메일 전송',
+  //   description: '유저 비밀번호 변경 이메일 전송 API',
+  // })
+  // @ApiResponse({
+  //   description: '이메일 발송 성공 여부가 리턴됩니다',
+  //   // type: CreateUserResponseDto,
+  // })
+  // sendemail() {
+  //   return this.authService.sendemail();
+  // }
+
+  // @Put('password')
+  // @ApiOperation({
+  //   summary: '비밀번호 변경 사항 업데이트',
+  //   description: '유저 비밀번호 변경 사항 업데이트 API',
+  // })
+  // @ApiResponse({
+  //   description: '비밀번호 변경 성공 여부가 리턴됩니다.',
+  //   // type: CreateUserResponseDto,
+  // })
+  // reset() {
+  //   return this.authService.reset();
+  // }
+
 }

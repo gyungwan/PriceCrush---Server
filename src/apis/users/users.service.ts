@@ -42,13 +42,16 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: { name, phone },
     });
+    if (!user) {
+      throw new UnprocessableEntityException('없는 유저 입니다.');
+    }
     return user.email;
   }
 
   async findUserPWd({ name, phone, email }) {
     // 임시 비밀번호 발급
     const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const specialCharacters = '!@#$%^&*(),.?":{}|<>';
+    const specialCharacters = '!@#$%^&*(),.?:{}|<>';
     const numbers = '0123456789';
 
     // 비밀번호 길이 4 ~ 16으로 지정
@@ -110,12 +113,28 @@ export class UsersService {
 
   async updatePwd({ password, email }) {
     const hashedPassword = await bcrypt.hash(password, 10);
-    return await this.userRepository.update(
-      {
-        email,
-      },
-      { password: hashedPassword },
-    );
+    const changedPwd = (
+      await this.userRepository.update(
+        {
+          email,
+        },
+        { password: hashedPassword },
+      )
+    ).affected
+      ? true
+      : false;
+    if (!changedPwd) {
+      throw new ConflictException(
+        '비밀번호 변경이 정상적으로 이루어지지 않았습니다.',
+      );
+    } else {
+      return {
+        status: {
+          code: 200,
+          msg: '비밀번호가 정상적으로 변경되었습니다.',
+        },
+      };
+    }
   }
 
   // update(id: number, updateUserDto: UpdateUserDto) {

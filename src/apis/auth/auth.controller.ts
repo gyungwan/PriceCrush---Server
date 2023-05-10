@@ -113,7 +113,6 @@ export class AuthController {
     return this.authService.certification(body);
   }
 
-
   // @Post('password')
   // @ApiOperation({
   //   summary: '비밀번호 변경 이메일 전송',
@@ -139,5 +138,4 @@ export class AuthController {
   // reset() {
   //   return this.authService.reset();
   // }
-
 }

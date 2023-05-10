@@ -19,7 +19,7 @@ export class Auction {
   id: string;
 
   @ApiProperty({ description: '상품 아이디' })
-  @ManyToOne(() => Product, { eager: true })
+  @ManyToOne(() => Product, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn()
   product: Product;
 

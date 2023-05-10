@@ -17,6 +17,7 @@ import { CreateUserResponseDto } from './dto/create-user.response.dto';
 import { FindUserPwdDto } from './dto/find-userPwd.dto';
 import { UpdatePwdDto } from './dto/update-userPwd.dto';
 import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
+import { FindUserResponseDto } from './dto/find-user.response.dto';
 
 @Controller('users')
 @ApiTags('유저 API')
@@ -41,7 +42,12 @@ export class UsersController {
   @Get()
   @ApiOperation({
     summary: '유저 정보 조회',
-    description: '유저 정보 조회 API',
+    description:
+      '유저 정보 조회 API, accesstoken이 header(bearer)에 필요합니다.',
+  })
+  @ApiResponse({
+    description: '로그인 되어있는 유저의 프로필이 리턴됩니다.',
+    type: FindUserResponseDto,
   })
   async findOne(@Req() req) {
     const { email } = req.user;

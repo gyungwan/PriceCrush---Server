@@ -208,7 +208,7 @@ export class AuctionService {
       });
     }
   }
-  async auctionEnd(auctionId: string): Promise<Auction> {
+  async auctionEnd(auctionId): Promise<Auction> {
     //경매생성한 유저가맞는지 검증후 종료
     const auction = await this.auctionRepository.findOne({
       where: { id: auctionId },
@@ -233,22 +233,20 @@ export class AuctionService {
 
     return auction;
   }
-  async auctionDelete(auctionId: string) {
+  async auctionDelete(auctionId) {
     const auction = await this.auctionRepository.findOne({
       where: { id: auctionId },
       relations: ['product', 'product.user'],
     });
-    // // 경매를 삭제합니다.
-    // await this.auctionRepository.delete(auctionId);
 
+    if (!auction) {
+      // 예외 처리
+      throw new NotFoundException(`해당하는 경매는 삭제 되었습니다.`);
+    }
     const productId = auction.product.id;
-    const userId = auction.product.user.id;
+    await this.productRepository.delete(productId);
 
-    // // 연결된 상품을 삭제합니다.
-    // await this.productRepository.delete({ auction: { id: auctionId } });
     await this.auctionRepository.delete(auctionId);
-    await this.auctionRepository.manager.delete('Product', productId);
-    await this.auctionRepository.manager.delete('User', userId);
     return auction ? true : false;
   }
   async test(client: Socket, data) {

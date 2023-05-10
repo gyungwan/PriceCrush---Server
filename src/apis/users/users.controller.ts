@@ -14,7 +14,6 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserResponseDto } from './dto/create-user.response.dto';
-import { FindUserResponseDto } from './dto/find-user.response.dto';
 import { FindUserPwdDto } from './dto/find-userPwd.dto';
 import { UpdatePwdDto } from './dto/update-userPwd.dto';
 import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
@@ -36,6 +35,17 @@ export class UsersController {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     createUserDto.password = hashedPassword;
     return this.usersService.create(createUserDto);
+  }
+
+  @UseGuards(RestAuthAccessGuard)
+  @Get()
+  @ApiOperation({
+    summary: '유저 정보 조회',
+    description: '유저 정보 조회 API',
+  })
+  async findOne(@Req() req) {
+    const { email } = req.user;
+    return this.usersService.myProfile({ email });
   }
 
   @Get('find/id')

@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import coolsms from 'coolsms-node-sdk';
+import { FindUserResponseDto } from './dto/find-user.response.dto';
 
 @Injectable()
 export class UsersService {
@@ -32,6 +33,12 @@ export class UsersService {
         message: '회원가입 성공!',
       },
     };
+  }
+
+  async myProfile({ email }): Promise<FindUserResponseDto> {
+    const user = await this.userRepository.findOneBy({ email });
+    const { password, ...result } = user;
+    return result;
   }
 
   async findOne({ email }) {

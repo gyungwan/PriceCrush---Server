@@ -79,12 +79,12 @@ export class AuthService {
     const now = new Date();
 
     if (!validCode) {
-      throw new ConflictException('유효한 인증코드가 존재하지 않습니다');
+      throw new ConflictException('인증코드가 일치하지 않습니다.');
     } else {
       const limitTime = validCode.created_at;
       limitTime.setMinutes(limitTime.getMinutes() + 3);
       if (now > limitTime) {
-        throw new ConflictException('인증코드의 유효기간이 지났습니다');
+        throw new ConflictException('인증코드의 유효기간이 지났습니다.');
       } else {
         return {
           stauts: {

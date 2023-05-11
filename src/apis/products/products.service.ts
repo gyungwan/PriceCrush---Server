@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, MoreThan, Repository } from 'typeorm';
+import { DataSource, LessThan, MoreThan, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { ProductImage } from '../productImage/entities/productImage.entity';
 import * as nodemailer from 'nodemailer';
@@ -116,6 +116,29 @@ export class ProductsService {
       totalCount, //총 상품 수
       totalPages: Math.ceil(totalCount / limit), //페이지 수
     };
+  }
+
+  async findMySellingAuctionList({ userId }) {
+    const myAuctions = await this.productRepository.find({
+      where: {
+        user: { id: userId },
+        end_date: MoreThan(new Date(new Date().getTime() + 1000 * 60 * 60 * 9)),
+      },
+      relations: ['user'],
+    });
+
+    return myAuctions;
+  }
+
+  async findMySoldAuctionList({ userId }) {
+    const myAuctions = await this.productRepository.find({
+      where: {
+        user: { id: userId },
+        end_date: LessThan(new Date(new Date().getTime() + 1000 * 60 * 60 * 9)),
+      },
+      relations: ['user'],
+    });
+    return myAuctions;
   }
 
   async update({ productId, updateProductInput }) {

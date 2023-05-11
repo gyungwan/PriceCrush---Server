@@ -11,6 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
   Query,
+  Req,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -145,6 +146,30 @@ export class ProductsController {
       (limit = 12),
     );
     return products;
+  }
+
+  //----------------- 마이페이지 판매 중 경매 리스트 조회 -----------------------//
+  @UseGuards(RestAuthAccessGuard)
+  @ApiOperation({
+    summary: '마이페이지 판매 중 경매 리스트',
+    description: '마이페이지 판매 중 경매 리스트 조회 API',
+  })
+  @Get('/user/selling')
+  findUserSellingAuction(@Req() req) {
+    const userId = req.user.id;
+    return this.productsService.findMySellingAuctionList({ userId });
+  }
+
+  //----------------- 마이페이지 판매 종료 경매 리스트 조회 -----------------------//
+  @UseGuards(RestAuthAccessGuard)
+  @ApiOperation({
+    summary: '마이페이지 판매 종료 경매 리스트',
+    description: '마이페이지 판매 종료 경매 리스트 조회 API',
+  })
+  @Get('/user/sold')
+  findUserSoldAuction(@Req() req) {
+    const userId = req.user.id;
+    return this.productsService.findMySoldAuctionList({ userId });
   }
   //----------------- 상품 업데이트 -----------------------//
   // 상품 start_date 이후로 업데이트 못하게 하는 로직

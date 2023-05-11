@@ -7,13 +7,12 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request,
+  Req,
   Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuctionService } from './auction.service';
 import { CreateAuctionDto } from './dto/create-auction.dto';
-import { UpdateAuctionDto } from './dto/update-auction.dto';
 import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
 
 @Controller('auction')
@@ -34,35 +33,13 @@ export class AuctionController {
 
   @UseGuards(RestAuthAccessGuard)
   @ApiOperation({
-    summary: '마이페이지 판매 중 경매 리스트',
-    description: '마이페이지 판매 중 경매 리스트 조회 API',
-  })
-  @Get('/user/selling')
-  findUserSellingAuction(@Request() req) {
-    const userId = req.user.id;
-    return this.auctionService.findMySellingAuctionList(userId);
-  }
-
-  @UseGuards(RestAuthAccessGuard)
-  @ApiOperation({
-    summary: '마이페이지 판매 종료 경매 리스트',
-    description: '마이페이지 판매 종료 경매 리스트 조회 API',
-  })
-  @Get('/user/sold')
-  findUserSoldAuction(@Request() req) {
-    const userId = req.user.id;
-    return this.auctionService.findMySoldAuctionList(userId);
-  }
-
-  @UseGuards(RestAuthAccessGuard)
-  @ApiOperation({
     summary: '마이페이지 입찰 중 경매 리스트',
     description: '마이페이지 입찰 중 경매 리스트 조회 API',
   })
   @Get('/user/bidding')
-  findBidAuction(@Request() req) {
+  findBidAuction(@Req() req) {
     const userId = req.user.id;
-    return this.auctionService.findBiddingList(userId);
+    return this.auctionService.findBiddingList({ userId });
   }
 
   @UseGuards(RestAuthAccessGuard)
@@ -71,9 +48,9 @@ export class AuctionController {
     description: '마이페이지 종료된 입찰 경매 리스트 조회 API',
   })
   @Get('/user/endedBid')
-  findEndedBidAuction(@Request() req) {
+  findEndedBidAuction(@Req() req) {
     const userId = req.user.id;
-    return this.auctionService.findEndedBidList(userId);
+    return this.auctionService.findEndedBidList({ userId });
   }
 
   @Get(':id')

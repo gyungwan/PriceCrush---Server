@@ -58,6 +58,7 @@ export class AuthController {
     return {
       accessToken,
       user: {
+        id: user.id,
         email: user.email,
         phone: user.phone,
         nickname: user.nickname,

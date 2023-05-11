@@ -95,12 +95,4 @@ export class AuthService {
       }
     }
   }
-
-  sendemail() {
-    return `This action returns all auth`;
-  }
-
-  reset() {
-    return `This action returns all auth`;
-  }
 }

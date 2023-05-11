@@ -14,10 +14,10 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserResponseDto } from './dto/create-user.response.dto';
-import { FindUserResponseDto } from './dto/find-user.response.dto';
 import { FindUserPwdDto } from './dto/find-userPwd.dto';
 import { UpdatePwdDto } from './dto/update-userPwd.dto';
 import { RestAuthAccessGuard } from 'src/common/auth/rest-auth-guards';
+import { FindUserResponseDto } from './dto/find-user.response.dto';
 
 @Controller('users')
 @ApiTags('유저 API')
@@ -36,6 +36,22 @@ export class UsersController {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     createUserDto.password = hashedPassword;
     return this.usersService.create(createUserDto);
+  }
+
+  @UseGuards(RestAuthAccessGuard)
+  @Get()
+  @ApiOperation({
+    summary: '유저 정보 조회',
+    description:
+      '유저 정보 조회 API, accesstoken이 header(bearer)에 필요합니다.',
+  })
+  @ApiResponse({
+    description: '로그인 되어있는 유저의 프로필이 리턴됩니다.',
+    type: FindUserResponseDto,
+  })
+  async findOne(@Req() req) {
+    const { email } = req.user;
+    return this.usersService.myProfile({ email });
   }
 
   @Get('find/id')

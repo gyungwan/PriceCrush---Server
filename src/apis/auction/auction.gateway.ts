@@ -17,7 +17,11 @@ import { ApiTags } from '@nestjs/swagger';
 // localhost:3000/auction로 요청을 보내면 이 gateway가 작동한다.
 @WebSocketGateway({
   cors: {
-    origin: ['https://price-crush-client.vercel.app', 'http://localhost:3000'],
+    origin: [
+      'http://localhost:3000',
+      'https://localhost:3000',
+      'https://price-crush-client.vercel.app',
+    ],
   },
   namespace: '/auction',
 })
@@ -58,7 +62,7 @@ export class AuctionGateway
   ) {
     console.log(data);
     console.log(`Client ${client.id} bid with ${data.price}`);
-    await this.auctionService.bid(client, data); // 파싱된 데이터를 사용하여 서비스 메서드를 호출
+    await this.auctionService.bid(client, data);
   }
 
   @SubscribeMessage('test')

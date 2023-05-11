@@ -159,13 +159,16 @@ export class AuctionService {
       }
       console.log('client.rooms');
       console.log(client.rooms);
-      client
-        // .to(`auction-${product.id}`)
-        .emit('bidResult', {
-          success: true,
-          message: `Bid successfully with ${data.price} for ${product.name}`,
-          auctionResult,
-        });
+      client.broadcast.emit('bidResult', {
+        success: true,
+        message: `Bid successfully with ${data.price} for ${product.name}`,
+        auctionResult,
+      });
+      client.emit('bidResult', {
+        success: true,
+        message: `Bid successfully with ${data.price} for ${product.name}`,
+        auctionResult,
+      });
       // 새로운 입찰이 진행되었을 때, productId room에 있는 모든 socket에게 broadcast
       // 새로운 입찰이 진행되었을 때, auctoinId room에 있는 입찰자에게만 broadcast
     } else {
@@ -176,7 +179,7 @@ export class AuctionService {
       });
     }
   }
-  async auctionEnd(auctionId: string): Promise<Auction> {
+  async auctionEnd(auctionId): Promise<Auction> {
     //경매생성한 유저가맞는지 검증후 종료
     const auction = await this.auctionRepository.findOne({
       where: { id: auctionId },
@@ -201,22 +204,20 @@ export class AuctionService {
 
     return auction;
   }
-  async auctionDelete(auctionId: string) {
+  async auctionDelete(auctionId) {
     const auction = await this.auctionRepository.findOne({
       where: { id: auctionId },
       relations: ['product', 'product.user'],
     });
-    // // 경매를 삭제합니다.
-    // await this.auctionRepository.delete(auctionId);
 
+    if (!auction) {
+      // 예외 처리
+      throw new NotFoundException(`해당하는 경매는 삭제 되었습니다.`);
+    }
     const productId = auction.product.id;
-    const userId = auction.product.user.id;
+    await this.productRepository.delete(productId);
 
-    // // 연결된 상품을 삭제합니다.
-    // await this.productRepository.delete({ auction: { id: auctionId } });
     await this.auctionRepository.delete(auctionId);
-    await this.auctionRepository.manager.delete('Product', productId);
-    await this.auctionRepository.manager.delete('User', userId);
     return auction ? true : false;
   }
   async test(client: Socket, data) {

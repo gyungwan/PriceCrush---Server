@@ -63,17 +63,17 @@ export class AuctionController {
   @ApiResponse({ type: Object })
   async auctionEnd(
     //
-    @Body('id') auctionId: string,
+    @Body('id') productId: string,
   ) {
-    console.log('종료', auctionId);
-    return await this.auctionService.auctionEnd(auctionId);
+    console.log('종료', productId);
+    return await this.auctionService.auctionEnd(productId);
   }
 
   @Delete('/')
   @ApiOperation({ summary: '경매 삭제', description: '경매 삭제 API' })
   @ApiResponse({ type: Boolean })
-  async auctionDelete(@Query('id') auctionId: string) {
+  async auctionDelete(@Query('id') productId: string) {
     //console.log('종료', auctionId);
-    return await this.auctionService.auctionDelete(auctionId);
+    return await this.auctionService.auctionDelete(productId);
   }
 }

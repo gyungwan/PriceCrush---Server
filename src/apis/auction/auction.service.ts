@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConsoleLogger, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuctionDto } from './dto/create-auction.dto';
 import { UpdateAuctionDto } from './dto/update-auction.dto';
 import { AuctionInterface } from './interfaces/auction.interface';
@@ -179,46 +179,52 @@ export class AuctionService {
       });
     }
   }
-  async auctionEnd(auctionId): Promise<Auction> {
+  async auctionEnd(productId): Promise<Product> {
     //경매생성한 유저가맞는지 검증후 종료
-    const auction = await this.auctionRepository.findOne({
-      where: { id: auctionId },
-      relations: ['product'],
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+      relations: ['user'],
     });
-    console.log(auction);
-    if (!auction) {
+
+    if (!productId) {
       throw new NotFoundException(`해당하는 경매를 찾을 수 없습니다.`);
     }
     // 이미 경매가 종료되었으면 중복 종료하지 않도록 예외 처리
     const now = new Date();
-    if (auction.product.end_date && auction.product.end_date <= now) {
+    if (product.end_date && product.end_date <= now) {
       throw new Error(`해당 경매가 종료되었습니다.`);
     }
 
     // 경매 종료 시간을 현재 시간으로 설정
-    auction.product.end_date = new Date();
-    await this.productRepository.save(auction.product);
+    product.end_date = new Date();
+    await this.productRepository.save(product);
 
     // 경매가 종료되었음을 참여한 유저들에게 알림
     //this.notifyAuctionEnd(auction.product.id);
 
-    return auction;
+    return product;
   }
-  async auctionDelete(auctionId) {
-    const auction = await this.auctionRepository.findOne({
-      where: { id: auctionId },
-      relations: ['product', 'product.user'],
+  async auctionDelete(productId) {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+      relations: ['user', 'auction'],
     });
 
-    if (!auction) {
+    if (!productId) {
       // 예외 처리
       throw new NotFoundException(`해당하는 경매는 삭제 되었습니다.`);
     }
-    const productId = auction.product.id;
-    await this.productRepository.delete(productId);
 
-    await this.auctionRepository.delete(auctionId);
-    return auction ? true : false;
+    const auctionId = product.auction;
+
+    if (auctionId) {
+      await this.productRepository.delete(productId);
+
+      await this.auctionRepository.delete(auctionId);
+      return auctionId ? true : false;
+    } else {
+      throw new NotFoundException(`해당하는 경매는 삭제 되었습니다.`);
+    }
   }
   async test(client: Socket, data) {
     console.log(data);
